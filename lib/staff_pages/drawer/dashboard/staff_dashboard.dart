@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
+import '../../../student_pages/drawer/dashboard/dashboard.dart';
 import '../menu_page/menu_page.dart';
 
 
@@ -147,7 +148,7 @@ class _StaffDashState extends State<StaffDash> {
                     ),
                     trailing: const CircleAvatar(
                       radius: 30,
-                      backgroundImage: AssetImage('assets/images/user.JPG'),
+                      backgroundImage: AssetImage('assets/images/user.jpg'),
                     ),
                   ),
                 )
@@ -165,24 +166,34 @@ class _StaffDashState extends State<StaffDash> {
                 childAspectRatio: 1.1,
               ),
               itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        color: catColor[index],
-                        shape: BoxShape.circle,
+                return GestureDetector(
+                  onTap: () {
+                    if (catName[index] == "Posted Job") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CoOrdPage()),
+                      );
+                    }
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                          color: catColor[index],
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: catIcon[index],
+                        ),
                       ),
-                      child: Center(
-                        child: catIcon[index],
+                      SizedBox(height: 10,),
+                      Text(
+                        catName[index], style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black.withOpacity(0.7)),
                       ),
-                    ),
-                    SizedBox(height: 10,),
-                    Text(
-                      catName[index], style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black.withOpacity(0.7)),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               },
             ),

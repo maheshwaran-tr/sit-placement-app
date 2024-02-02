@@ -31,16 +31,18 @@ class _DashBoardState extends State<DashBoard> {
     super.initState();
     initialize();
 
-    for(var jobApplication in jobAppliedList){
-      attendedCompanies.add(jobApplication.jobPost.companyName);
-      companyStatus.add(jobApplication.status.statusName);
-    }
+
   }
 
   void initialize() async{
     List<JobAppliedModel>? newList= await StudentRequest.getJobsAppliedByStudents(widget.token, widget.student!.studentId);
     setState(() {
       jobAppliedList = newList??[];
+      for(var jobApplication in jobAppliedList){
+        print(jobApplication);
+        attendedCompanies.add(jobApplication.jobPost.companyName);
+        companyStatus.add(jobApplication.status.statusName);
+      }
     });
   }
 
