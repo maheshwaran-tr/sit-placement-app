@@ -20,9 +20,9 @@ class JobPostModel {
   final String jobName;
   final String jobDescription;
   final String campusMode;
-  final int eligible10ThMark;
-  final int eligible12ThMark;
-  final int eligibleCgpaMark;
+  final double eligible10ThMark;
+  final double eligible12ThMark;
+  final double eligibleCgpaMark;
   final String venue;
   final String interviewDate;
   final String interviewTime;

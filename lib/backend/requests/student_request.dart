@@ -1,11 +1,34 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:sit_placement_app/backend/models/applied_job_model.dart';
 
 import '../models/student_model.dart';
 import '../url_config/urls.dart';
 
 class StudentRequest{
+
+
+  static Future<List<JobAppliedModel>?> getJobsAppliedByStudents(String token,int studentId) async{
+    final response = await http.get(
+      Uri.parse("${Urls.appliedJobsByStudent}/$studentId"),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      }
+    );
+    if(response.statusCode == 200){
+      List<dynamic> jsonData = jsonDecode(response.body) as List<dynamic>;
+      List<JobAppliedModel> jobsList = [];
+      for(var obj in jsonData){
+        final pobj = JobAppliedModel.fromJson(obj);
+        jobsList.add(pobj);
+      }
+      return jobsList;
+    }else{
+      return null;
+    }
+  }
 
   static Future<Student> getStudentProfile(String token) async {
     final response = await http.get(

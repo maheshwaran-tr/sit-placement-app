@@ -47,11 +47,10 @@ class JobRequest{
     throw Exception('Failed to load jobs');
   }
 
-  static Future<void> applyJob(int jobId,String rollNo,String status,String token) async{
+  static Future<void> applyJob(int jobId,int rollNo,String token) async{
     var regBody = {
       "jobId":jobId,
-      "studentRollno":rollNo,
-      "status":status
+      "studentId":rollNo
     };
     var response = await http.post(Uri.parse(Urls.applyJob),
         headers: {'Authorization': 'Bearer $token',"Content-Type": "application/json"},
@@ -63,5 +62,4 @@ class JobRequest{
       print("FAILED");
     }
   }
-
 }

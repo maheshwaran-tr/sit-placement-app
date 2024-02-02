@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:sit_placement_app/backend/models/applied_job_model.dart';
+import 'package:sit_placement_app/backend/models/student_model.dart';
+import 'package:sit_placement_app/backend/requests/student_request.dart';
+import 'package:sit_placement_app/student_pages/student_home_page/job_list_page.dart';
+
 
 import '../menu_page/menu_page.dart';
 
 
 class DashBoard extends StatefulWidget {
   final token;
-  const DashBoard({Key? key,required this.token}) : super(key: key);
+  final Student? student;
+  const DashBoard({Key? key,required this.token,required this.student}) : super(key: key);
 
   @override
   State<DashBoard> createState() => _DashBoardState();
@@ -14,6 +20,29 @@ class DashBoard extends StatefulWidget {
 
 class _DashBoardState extends State<DashBoard> {
   final _drawerController = ZoomDrawerController();
+
+  List<JobAppliedModel> jobAppliedList = [];
+  List<String> attendedCompanies = [];
+  List<String> companyStatus = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initialize();
+
+    for(var jobApplication in jobAppliedList){
+      attendedCompanies.add(jobApplication.jobPost.companyName);
+      companyStatus.add(jobApplication.status.statusName);
+    }
+  }
+
+  void initialize() async{
+    List<JobAppliedModel>? newList= await StudentRequest.getJobsAppliedByStudents(widget.token, widget.student!.studentId);
+    setState(() {
+      jobAppliedList = newList??[];
+    });
+  }
 
   String _getGreeting() {
     var hour = DateTime.now().hour;
@@ -62,20 +91,21 @@ class _DashBoardState extends State<DashBoard> {
     "Apply Job",
   ];
 
-  List<String> attendedCompanies = [];
 
-  List<String> companyStatus = [];
+
 
   static const Map<String, IconData> companyStatusIcons = {
     "Selected": Icons.check_circle,
     "Not Selected": Icons.cancel,
     "Waiting for Result": Icons.access_time,
+    "Not Attended":Icons.not_interested
   };
 
   static const Map<String, Color> companyStatusColors = {
     "Selected": Colors.green,
     "Not Selected": Colors.red,
     "Waiting for Result": Colors.grey,
+    "Not Attended":Colors.amber
   };
 
   @override
@@ -183,7 +213,7 @@ class _DashBoardState extends State<DashBoard> {
                     } else if (catName[index] == "Apply Job") {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ApplyJobPage()),
+                        MaterialPageRoute(builder: (context) => JobListPage(token: widget.token, studentProfile: widget.student)),
                       );
                     }
                   },

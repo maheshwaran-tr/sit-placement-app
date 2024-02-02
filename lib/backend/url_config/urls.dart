@@ -52,6 +52,7 @@ class Urls {
   static final String studentsByPlacementWilling = "$baseurl/students/get-placement-willing-list/{val}";
   static final String applyJob = "$baseurl/students/apply-job";
   static final String updatePlacementWilling = "$baseurl/students/update-placement-willing/{val}";
+  static final String appliedJobsByStudent = "$baseurl/students/get-applied-jobs";
 
   // Staff Urls
   static final String allStaffs = "$baseurl/staffs/all";
