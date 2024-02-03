@@ -1,7 +1,7 @@
 class Urls {
 
-    static const baseurl = "http://192.168.0.13:7070/sit";
-  // static const baseurl = "http://10.0.2.2:7070/sit";
+    // static const baseurl = "http://192.168.0.13:7070/sit";
+  static const baseurl = "http://10.0.2.2:7070/sit";
 
   // Auth Urls
   static const String loginUser = "$baseurl/auth/login";
@@ -15,10 +15,10 @@ class Urls {
   static const String updateStudents = "$baseurl/students/update";
   static const String deleteStudents = "$baseurl/students/delete/{id}";
   static const String studentByToken = "$baseurl/students/profile";
-  static const String studentsByDept = "$baseurl/students/dept/{dept}";
+  static const String studentsByDept = "$baseurl/students/dept";
   static const String studentsByPlacementWilling = "$baseurl/students/get-placement-willing-list/{val}";
   static const String applyJob = "$baseurl/students/apply-job";
-  static const String updatePlacementWilling = "$baseurl/students/update-placement-willing/{val}";
+  static const String updatePlacementWilling = "$baseurl/students/update-placement-willing";
   static const String appliedJobsByStudent = "$baseurl/students/get-applied-jobs";
 
   // Staff Urls

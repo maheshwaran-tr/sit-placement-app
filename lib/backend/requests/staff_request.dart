@@ -7,6 +7,11 @@ import '../url_config/urls.dart';
 
 class StaffRequest{
 
+  static Future<String> getStaffDept(String token) async{
+    Staff staffProfile = await getStaffProfile(token);
+    return staffProfile.department;
+  }
+
   static Future<Staff> getStaffProfile(String token) async {
     final response = await http.get(
       Uri.parse(Urls.staffByToken),

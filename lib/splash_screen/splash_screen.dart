@@ -98,7 +98,7 @@ class _SplashScreenState extends State<SplashScreen>
         children: [
           Positioned.fill(
             child: Lottie.asset(
-              'assets/lottie/DB.json',
+              'assets/lottie/flow1.json',
               fit: BoxFit.fitWidth,
               controller: _controller,
               onLoaded: (composition) {

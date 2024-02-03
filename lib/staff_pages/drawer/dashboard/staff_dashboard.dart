@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:sit_placement_app/staff_pages/staff_home_page/add_student.dart';
+import 'package:sit_placement_app/staff_pages/staff_home_page/job_applied_list.dart';
+import 'package:sit_placement_app/staff_pages/staff_home_page/staff_approval_page.dart';
+import 'package:sit_placement_app/staff_pages/staff_home_page/student_list.dart';
 
 import '../../../student_pages/drawer/dashboard/dashboard.dart';
 import '../menu_page/menu_page.dart';
@@ -19,6 +23,14 @@ class StaffDash extends StatefulWidget {
 class _StaffDashState extends State<StaffDash> {
   final _drawerController = ZoomDrawerController();
 
+  String dept = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
   String _getGreeting() {
     var hour = DateTime.now().hour;
 
@@ -168,11 +180,20 @@ class _StaffDashState extends State<StaffDash> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    if (catName[index] == "Posted Job") {
+                    if (catName[index] == "Student List") {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => CoOrdPage()),
+                        MaterialPageRoute(builder: (context) => StudentListPage(token: widget.token,)),
                       );
+                    }else if(catName[index] == "Add Student"){
+                      Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AddStudentPage()));
+                    }else if(catName[index] == "Job Applied List"){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => JobAppliedListPage()));
+                    }else if(catName[index] == "Approval Page"){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => ApprovalPage(token: widget.token)));
                     }
                   },
                   child: Column(

@@ -86,7 +86,7 @@ class StudentRequest{
 
   static Future<List<Student>> getStudentsByDept(String token, String dept) async {
     final response = await http.get(
-      Uri.parse(Urls.studentsByDept),
+      Uri.parse("${Urls.studentsByDept}/$dept"),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
