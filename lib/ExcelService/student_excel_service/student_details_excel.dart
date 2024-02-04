@@ -4,9 +4,10 @@ import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xcel;
 import '../../backend/models/student_model.dart';
 
 class StudentExcelService {
-  static Future<void> createExcelFile(List<Student> students) async {
+  static Future<void> createExcelFile(List<Student> students,String sheetName) async {
     final xcel.Workbook workbook = xcel.Workbook();
     final xcel.Worksheet sheet = workbook.worksheets[0];
+    sheet.name = sheetName;
     List<String> columnNames = [
       'ID',
       'Roll No',
@@ -76,7 +77,7 @@ class StudentExcelService {
     final List<int> bytes = workbook.saveAsStream();
     // Save the file to a desired location (e.g., device storage)
     // In this example, the file is saved to the app's documents directory
-    final String path = '/storage/emulated/0/Documents/students.xlsx';
+    final String path = '/storage/emulated/0/Documents/test.xlsx';
     await File(path).writeAsBytes(bytes, flush: true);
 
     workbook.dispose();

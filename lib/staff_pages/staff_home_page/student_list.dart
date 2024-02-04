@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sit_placement_app/backend/requests/staff_request.dart';
-import 'package:sit_placement_app/backend/requests/student_request.dart';
+import 'package:sit_placement_app/ExcelService/student_excel_service/student_details_excel.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/student_details.dart';
 
 
-import '../../ExcelService/student_excel_service/student_details_excel.dart';
 import '../../backend/models/student_model.dart';
 
 
 
 class StudentListPage extends StatefulWidget {
-  final token;
+  final String department;
+  final List<Student> students;
 
   StudentListPage({
-    required this.token,
+    required this.department,
+    required this.students,
   });
 
   @override
@@ -27,10 +27,6 @@ class _StudentListPageState extends State<StudentListPage> {
   List<String> selectedSkillsList = [];
   String searchText = '';
 
-  String department = "";
-  List<Student> students = [];
-
-
   List<int> batchYears = [2023, 2022, 2021]; // List of available batch years
   List<String> skillsList = [
     'Java',
@@ -41,30 +37,22 @@ class _StudentListPageState extends State<StudentListPage> {
   @override
   void initState() {
     super.initState();
-    intitData();
-
+    filteredStudents = List.from(widget.students);
   }
 
-  Future<void> intitData() async {
-      department = await StaffRequest.getStaffDept(widget.token);
-      students = await StudentRequest.getStudentsByDept(widget.token, department);
-      setState(() {
-        filteredStudents = students;
-      });
-  }
   void filterStudents() {
     setState(() {
       if (selectedBatchList.isNotEmpty) {
-        filteredStudents = students.where((student) {
+        filteredStudents = widget.students.where((student) {
           return selectedBatchList.contains(student.batch);
         }).toList();
       } else if (selectedSkillsList.isNotEmpty) {
-        filteredStudents = students.where((student) {
+        filteredStudents = widget.students.where((student) {
           return selectedSkillsList
               .any((skill) => student.skills!.contains(skill));
         }).toList();
       } else {
-        filteredStudents = List.from(students);
+        filteredStudents = List.from(widget.students);
       }
 
       if (searchText.isNotEmpty) {
@@ -77,7 +65,7 @@ class _StudentListPageState extends State<StudentListPage> {
 
   void downloadData() async{
     // Implement download functionality here...
-    await StudentExcelService.createExcelFile(students);
+    await StudentExcelService.createExcelFile(widget.students,"STUDENT-LIST");
   }
 
   void showBatchFilterDialog() {

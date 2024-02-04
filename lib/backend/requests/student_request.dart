@@ -6,26 +6,68 @@ import 'package:sit_placement_app/backend/models/applied_job_model.dart';
 import '../models/student_model.dart';
 import '../url_config/urls.dart';
 
-class StudentRequest{
+class StudentRequest {
+  static Future<List<JobAppliedModel>?> getJobAppliedForAllDeptStudents(
+      String token, String dept, int statusId) async {
+    final response = await http.post(Uri.parse(Urls.studentsByDeptAndStatus),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({"statusId": statusId, "dept": dept}));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = jsonDecode(response.body) as List<dynamic>;
+      List<JobAppliedModel> jobAppliedStudents = [];
+      for (var obj in jsonData) {
+        final pobj = JobAppliedModel.fromJson(obj);
+        jobAppliedStudents.add(pobj);
+      }
+      print(jobAppliedStudents);
+      return jobAppliedStudents;
+    } else {
+      return null;
+    }
+  }
 
+  static Future<List<JobAppliedModel>?> getApprovedStudents(
+      String token, int statusId) async {
+    final response = await http
+        .get(Uri.parse("${Urls.getApprovedStudentsAdmin}/$statusId"), headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    });
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = jsonDecode(response.body) as List<dynamic>;
+      List<JobAppliedModel> jobAppliedStudents = [];
+      for (var obj in jsonData) {
+        final pobj = JobAppliedModel.fromJson(obj);
+        jobAppliedStudents.add(pobj);
+      }
+      print(jobAppliedStudents);
+      return jobAppliedStudents;
+    } else {
+      return null;
+    }
+  }
 
-  static Future<List<JobAppliedModel>?> getJobsAppliedByStudents(String token,int studentId) async{
+  static Future<List<JobAppliedModel>?> getJobsAppliedByStudents(
+      String token, int studentId) async {
     final response = await http.get(
       Uri.parse("${Urls.appliedJobsByStudent}/$studentId"),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
-      }
+      },
     );
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       List<dynamic> jsonData = jsonDecode(response.body) as List<dynamic>;
       List<JobAppliedModel> jobsList = [];
-      for(var obj in jsonData){
+      for (var obj in jsonData) {
         final pobj = JobAppliedModel.fromJson(obj);
         jobsList.add(pobj);
       }
       return jobsList;
-    }else{
+    } else {
       return null;
     }
   }
@@ -62,29 +104,30 @@ class StudentRequest{
     }
   }
 
-    static Future<List<Student>?> getAllStudents(String token) async {
-      final response = await http.get(
-        Uri.parse(Urls.allStudents),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
-      if (response.statusCode == 200) {
-        List<dynamic> jsonData = jsonDecode(response.body) as List<dynamic>;
+  static Future<List<Student>?> getAllStudents(String token) async {
+    final response = await http.get(
+      Uri.parse(Urls.allStudents),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = jsonDecode(response.body) as List<dynamic>;
 
-        List<Student> studentsList = [];
-        for (var obj in jsonData) {
-          final pobj = Student.fromJson(obj);
-          studentsList.add(pobj);
-        }
-        return studentsList;
-      } else {
-        return null;
+      List<Student> studentsList = [];
+      for (var obj in jsonData) {
+        final pobj = Student.fromJson(obj);
+        studentsList.add(pobj);
       }
+      return studentsList;
+    } else {
+      return null;
     }
+  }
 
-  static Future<List<Student>> getStudentsByDept(String token, String dept) async {
+  static Future<List<Student>> getStudentsByDept(
+      String token, String dept) async {
     final response = await http.get(
       Uri.parse("${Urls.studentsByDept}/$dept"),
       headers: {
@@ -105,7 +148,8 @@ class StudentRequest{
     throw Exception("No Students For This Dept");
   }
 
-  static Future<bool> updatePlacementWilling(String token, Map<String, String> data) async {
+  static Future<bool> updatePlacementWilling(
+      String token, Map<String, String> data) async {
     final response = await http.put(Uri.parse(Urls.updatePlacementWilling),
         headers: {
           'Authorization': 'Bearer $token',
@@ -121,7 +165,7 @@ class StudentRequest{
 
   static Future<List<Student>?> getPWStudents(String token) async {
     final response = await http.get(
-      Uri.parse(Urls.studentsByPlacementWilling),
+      Uri.parse("${Urls.studentsByPlacementWilling}/yes"),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -139,5 +183,4 @@ class StudentRequest{
       return null;
     }
   }
-
 }

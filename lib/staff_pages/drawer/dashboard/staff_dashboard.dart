@@ -6,7 +6,9 @@ import 'package:sit_placement_app/staff_pages/staff_home_page/job_applied_list.d
 import 'package:sit_placement_app/staff_pages/staff_home_page/staff_approval_page.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/student_list.dart';
 
-import '../../../student_pages/drawer/dashboard/dashboard.dart';
+import '../../../backend/models/student_model.dart';
+import '../../../backend/requests/staff_request.dart';
+import '../../../backend/requests/student_request.dart';
 import '../menu_page/menu_page.dart';
 
 
@@ -21,16 +23,30 @@ class StaffDash extends StatefulWidget {
 }
 
 class _StaffDashState extends State<StaffDash> {
-  final _drawerController = ZoomDrawerController();
 
-  String dept = "";
+  String department = "";
+  List<Student> students = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    intitData();
 
   }
+
+  Future<void> intitData() async {
+    String dept = await StaffRequest.getStaffDept(widget.token);
+    List<Student> filteredStudents = await StudentRequest.getStudentsByDept(widget.token, dept);
+    setState(() {
+      students = filteredStudents;
+      department = dept;
+    });
+  }
+
+  final _drawerController = ZoomDrawerController();
+
+  // String dept = "";
+
   String _getGreeting() {
     var hour = DateTime.now().hour;
 
@@ -183,14 +199,14 @@ class _StaffDashState extends State<StaffDash> {
                     if (catName[index] == "Student List") {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => StudentListPage(token: widget.token,)),
+                        MaterialPageRoute(builder: (context) => StudentListPage(department: department, students: students,)),
                       );
                     }else if(catName[index] == "Add Student"){
                       Navigator.push(context,
                       MaterialPageRoute(builder: (context) => AddStudentPage()));
                     }else if(catName[index] == "Job Applied List"){
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => JobAppliedListPage()));
+                          MaterialPageRoute(builder: (context) => JobAppliedListPage(token: widget.token)));
                     }else if(catName[index] == "Approval Page"){
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => ApprovalPage(token: widget.token)));

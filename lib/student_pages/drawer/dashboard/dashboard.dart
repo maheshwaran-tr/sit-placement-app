@@ -6,6 +6,7 @@ import 'package:sit_placement_app/backend/requests/student_request.dart';
 import 'package:sit_placement_app/student_pages/student_home_page/job_list_page.dart';
 
 
+import '../../student_home_page/upload_status.dart';
 import '../menu_page/menu_page.dart';
 
 
@@ -30,8 +31,6 @@ class _DashBoardState extends State<DashBoard> {
     // TODO: implement initState
     super.initState();
     initialize();
-
-
   }
 
   void initialize() async{
@@ -182,7 +181,7 @@ class _DashBoardState extends State<DashBoard> {
                     ),
                     trailing: CircleAvatar(
                       radius: 30,
-                      backgroundImage: AssetImage('assets/images/user.JPG'),
+                      backgroundImage: AssetImage('assets/images/user.jpg'),
                     ),
                   ),
                 ),
@@ -351,24 +350,6 @@ class _DashBoardState extends State<DashBoard> {
 
 class CoOrdPage extends StatelessWidget {
   const CoOrdPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-class UploadStatusPage extends StatelessWidget {
-  const UploadStatusPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-class ApplyJobPage extends StatelessWidget {
-  const ApplyJobPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

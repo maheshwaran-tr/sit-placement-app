@@ -1,7 +1,16 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:sit_placement_app/admin_pages/admin_home_page/add_staff.dart';
+import 'package:sit_placement_app/admin_pages/admin_home_page/department_staff_list.dart';
+import 'package:sit_placement_app/admin_pages/admin_home_page/department_student_list.dart';
+import 'package:sit_placement_app/backend/requests/student_request.dart';
 
+
+import '../../../backend/models/applied_job_model.dart';
+import '../../admin_home_page/job_applications.dart';
+import '../../admin_home_page/post_job.dart';
 import '../menu_page/menu_page.dart';
 
 class AdminDash extends StatefulWidget {
@@ -15,6 +24,9 @@ class AdminDash extends StatefulWidget {
 }
 
 class _AdminDashState extends State<AdminDash> {
+
+
+
   final _drawerController = ZoomDrawerController();
 
   String _getGreeting() {
@@ -146,7 +158,7 @@ class _AdminDashState extends State<AdminDash> {
                     ),
                     trailing: const CircleAvatar(
                       radius: 30,
-                      backgroundImage: AssetImage('assets/images/user.JPG'),
+                      backgroundImage: AssetImage('assets/images/user.jpg'),
                     ),
                   ),
                 )
@@ -164,24 +176,49 @@ class _AdminDashState extends State<AdminDash> {
                 childAspectRatio: 1.1,
               ),
               itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        color: catColor[index],
-                        shape: BoxShape.circle,
+                return GestureDetector(
+                  onTap: (){
+                    if(catName[index] == "Add Staff"){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddStaffPage(token: widget.token,)),
+                      );
+                    }else if(catName[index] == "Dept Student List"){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DepartmentStudentListPage(token: widget.token,)),
+                      );
+                    }else if(catName[index] == "Post Job"){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => JobPostingScreen(token: widget.token,)),
+                      );
+                    }else if(catName[index] == "Staff List"){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DepartmentStaffListPage(token: widget.token,)),
+                      );
+                    }
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                          color: catColor[index],
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: catIcon[index],
+                        ),
                       ),
-                      child: Center(
-                        child: catIcon[index],
+                      SizedBox(height: 10,),
+                      Text(
+                        catName[index], style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black.withOpacity(0.7)),
                       ),
-                    ),
-                    SizedBox(height: 10,),
-                    Text(
-                      catName[index], style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black.withOpacity(0.7)),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               },
             ),
@@ -222,7 +259,7 @@ class _AdminDashState extends State<AdminDash> {
       GestureDetector(
         onTap: () {
           print(title);
-          _navigateToPage(title);
+          _navigateToPage(title,widget.token,context);
         },
         child: Container(
 
@@ -254,7 +291,22 @@ class _AdminDashState extends State<AdminDash> {
         ),
       );
 }
-void _navigateToPage(String pageTitle) {
+Future<void> _navigateToPage(String pageTitle,String token,BuildContext context) async {
   switch (pageTitle) {
+    case 'Job Applied List':
+      List<JobAppliedModel>? applicationsList = await getApprovedStudentsForAdmin(token,1);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => JobApplicationList(token: token,
+          ),
+        ),
+      );
+      break;
   }
+}
+
+Future<List<JobAppliedModel>?> getApprovedStudentsForAdmin(String token,int statusId) async {
+  List<JobAppliedModel>? applications = await StudentRequest.getApprovedStudents(token, statusId);
+  return applications;
 }

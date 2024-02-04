@@ -1,18 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sit_placement_app/backend/requests/student_request.dart';
+
+import '../../backend/models/applied_job_model.dart';
+import '../../backend/requests/staff_request.dart';
 
 class JobAppliedListPage extends StatefulWidget {
+  final token;
+
+  const JobAppliedListPage({super.key, required this.token});
+
   @override
   _JobAppliedListPageState createState() => _JobAppliedListPageState();
 }
 
 class _JobAppliedListPageState extends State<JobAppliedListPage> {
-  List<Student> students = [
-    Student(name: 'John Doe', appliedCompanyName: 'ABC Corp'),
-    Student(name: 'Jane Smith', appliedCompanyName: 'XYZ Ltd'),
-    Student(name: 'Bob Johnson', appliedCompanyName: '123 Industries'),
-    // Add more dummy data as needed
-  ];
+  List<JobAppliedModel> jobAppliedStudents = [];
+  String department = "";
+
+  List<StudentAppliedPermit> studentApplication = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initData();
+  }
+
+  Future<void> initData() async {
+    department = await StaffRequest.getStaffDept(widget.token);
+    print(department);
+    List<JobAppliedModel>? jobAppliedStudentsDummy =
+        await StudentRequest.getJobAppliedForAllDeptStudents(
+            widget.token, department, 1);
+    List<StudentAppliedPermit> studentsDummy = [];
+    List<StudentAppliedPermit> studentModelList = [];
+    setState(() {
+      jobAppliedStudents = jobAppliedStudentsDummy ?? [];
+      for(var application in jobAppliedStudents){
+        studentModelList.add(StudentAppliedPermit(jobApplication: application));
+      }
+      studentApplication = studentModelList;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +63,10 @@ class _JobAppliedListPageState extends State<JobAppliedListPage> {
         systemOverlayStyle: SystemUiOverlayStyle.light,
         title: Text(
           'Job Applied List',
-          style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.bold, color: Colors.black),
+          style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+              color: Colors.black),
         ),
       ),
       body: Padding(
@@ -58,7 +91,7 @@ class _JobAppliedListPageState extends State<JobAppliedListPage> {
                         ),
                       ),
                       title: Text(
-                        students[index].name,
+                        studentApplication[index].jobApplication.student.studentName,
                         style: TextStyle(
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.bold,
@@ -68,16 +101,16 @@ class _JobAppliedListPageState extends State<JobAppliedListPage> {
                       subtitle: Padding(
                         padding: const EdgeInsets.only(top: 5.0),
                         child: Text(
-                          'Applied to: ${students[index].appliedCompanyName}',
+                          'Applied to: ${studentApplication[index].jobApplication.jobPost.companyName}',
                           style: TextStyle(color: Colors.grey[600]),
                         ),
                       ),
                       trailing: Checkbox(
-                        value: students[index].isApproved,
+                        value: studentApplication[index].isApproved,
                         activeColor: Colors.green,
                         onChanged: (value) {
                           setState(() {
-                            students[index].isApproved = value!;
+                            studentApplication[index].isApproved = value!;
                           });
                         },
                       ),
@@ -85,13 +118,15 @@ class _JobAppliedListPageState extends State<JobAppliedListPage> {
                   );
                 },
                 separatorBuilder: (context, index) => SizedBox(height: 5),
-                itemCount: students.length,
+                itemCount: studentApplication.length,
               ),
             ),
             Container(
               margin: EdgeInsets.all(20),
               child: ElevatedButton.icon(
-                onPressed: isAnyStudentSelected() ? () => showApprovalMessage(context) : null,
+                onPressed: isAnyStudentSelected()
+                    ? () => showApprovalMessage(context)
+                    : null,
                 icon: Icon(
                   Icons.check,
                   size: 24,
@@ -121,10 +156,29 @@ class _JobAppliedListPageState extends State<JobAppliedListPage> {
   }
 
   bool isAnyStudentSelected() {
-    return students.any((student) => student.isApproved);
+    return studentApplication.any((student) => student.isApproved);
   }
 
-  void showApprovalMessage(BuildContext context) {
+  void showApprovalMessage(BuildContext context) async {
+
+    String msg = 'Selected students approved successfully!';
+    IconData iconToSet= Icons.check_circle;
+    MaterialColor clr = Colors.green;
+
+    List<JobAppliedModel> selectedApplications = studentApplication
+        .where((student) => student.isApproved)
+        .map((student) => student.jobApplication)
+        .toList();
+
+    print(selectedApplications);
+    bool approvalResult =await StaffRequest.approveAppliedStudents(widget.token, selectedApplications);
+    print(approvalResult);
+    if(!approvalResult){
+      msg = 'Student Approval failed';
+      iconToSet = Icons.cancel;
+      clr = Colors.red;
+    }
+
     // Create a GlobalKey for the overlay
     GlobalKey<State> overlayKey = GlobalKey<State>();
 
@@ -167,13 +221,13 @@ class _JobAppliedListPageState extends State<JobAppliedListPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.check_circle,
-                    color: Colors.green,
+                    iconToSet,
+                    color: clr,
                     size: 50,
                   ),
                   SizedBox(height: 16),
                   Text(
-                    'Selected students approved successfully!',
+                    msg,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Montserrat',
@@ -182,7 +236,11 @@ class _JobAppliedListPageState extends State<JobAppliedListPage> {
                     ),
                   ),
                   SizedBox(height: 16),
-                  TextButton(onPressed: (){Navigator.pop(context);}, child: Text("Done"))
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Done"))
                 ],
               ),
             ),
@@ -191,17 +249,15 @@ class _JobAppliedListPageState extends State<JobAppliedListPage> {
       );
     });
   }
-
 }
 
-class Student {
-  final String name;
-  final String appliedCompanyName;
+
+class StudentAppliedPermit{
+  final JobAppliedModel jobApplication;
   bool isApproved;
 
-  Student({
-    required this.name,
-    required this.appliedCompanyName,
-    this.isApproved = true,
+  StudentAppliedPermit({
+    required this.jobApplication,
+    this.isApproved = true
   });
 }

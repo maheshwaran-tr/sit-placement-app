@@ -28,8 +28,8 @@ class JobPostModel {
   final String interviewTime;
 
   JobPostModel({
-    required this.createdAt,
-    required this.lastModifiedAt,
+    this.createdAt,
+    this.lastModifiedAt,
     required this.jobId,
     required this.companyName,
     required this.companyDetails,

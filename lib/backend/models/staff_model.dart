@@ -22,8 +22,8 @@ class Staff {
   final String phoneNumber;
 
   Staff({
-    required this.createdAt,
-    required this.lastModifiedAt,
+    this.createdAt,
+    this.lastModifiedAt,
     required this.staffDbid,
     required this.staffId,
     required this.staffName,
@@ -48,8 +48,6 @@ class Staff {
   );
 
   Map<String, dynamic> toJson() => {
-    "createdAt": createdAt,
-    "lastModifiedAt": lastModifiedAt,
     "staffDBID": staffDbid,
     "staffId": staffId,
     "staffName": staffName,

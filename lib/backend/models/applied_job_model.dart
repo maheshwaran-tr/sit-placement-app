@@ -14,8 +14,8 @@ JobAppliedModel jobAppliedModelFromJson(String str) => JobAppliedModel.fromJson(
 String jobAppliedModelToJson(JobAppliedModel data) => json.encode(data.toJson());
 
 class JobAppliedModel {
-  final DateTime createdAt;
-  final DateTime lastModifiedAt;
+  final String? createdAt;
+  final String? lastModifiedAt;
   final int jobAppliedId;
   final JobPostModel jobPost;
   final Student student;
@@ -31,8 +31,8 @@ class JobAppliedModel {
   });
 
   factory JobAppliedModel.fromJson(Map<String, dynamic> json) => JobAppliedModel(
-    createdAt: DateTime.parse(json["createdAt"]),
-    lastModifiedAt: DateTime.parse(json["lastModifiedAt"]),
+    createdAt: json["createdAt"],
+    lastModifiedAt: json["lastModifiedAt"],
     jobAppliedId: json["jobAppliedId"],
     jobPost: JobPostModel.fromJson(json["jobPost"]),
     student: Student.fromJson(json["student"]),
@@ -40,8 +40,8 @@ class JobAppliedModel {
   );
 
   Map<String, dynamic> toJson() => {
-    "createdAt": createdAt.toIso8601String(),
-    "lastModifiedAt": lastModifiedAt.toIso8601String(),
+    "createdAt": createdAt,
+    "lastModifiedAt": lastModifiedAt,
     "jobAppliedId": jobAppliedId,
     "jobPost": jobPost.toJson(),
     "student": student.toJson(),

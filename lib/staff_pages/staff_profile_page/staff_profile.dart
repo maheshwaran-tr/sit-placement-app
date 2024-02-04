@@ -89,7 +89,7 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
                                 ),
                                 child: CircleAvatar(
                                   radius: 60,
-                                  backgroundImage: AssetImage('assets/images/ill.png'),
+                                  backgroundImage: AssetImage('assets/images/user.jpg'),
                                   backgroundColor: Colors.white,
                                 ),
                               ),
