@@ -23,7 +23,7 @@ class _AdminDrawerHomeState extends State<AdminDrawerHome> {
       body: ZoomDrawer(
         angle: 0.0,
         mainScreen: AdminDash(token: widget.token),
-        menuScreen: AdminMenuPage(token: widget.token),
+        menuScreen: AdminMenuPage(token: widget.token, selectedIndex: 0,),
       ),
     );
   }

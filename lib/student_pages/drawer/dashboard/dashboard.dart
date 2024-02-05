@@ -118,14 +118,16 @@ class _DashBoardState extends State<DashBoard> {
         child: ZoomDrawer(
           controller: _drawerController,
           style: DrawerStyle.defaultStyle,
-          menuScreen: MenuPage(token: widget.token,),
+          menuScreen: MenuPage(token: widget.token,selectedIndex: 0,),
           mainScreen: buildMainScreen(),
           borderRadius: 25.0,
           angle: 0, // Adjust the angle for a more dynamic appearance
           mainScreenScale: 0.2, // Adjust the scale for the main screen
           slideWidth: MediaQuery.of(context).size.width * 0.8,
         ),
+
       ),
+
     );
   }
 

@@ -29,7 +29,6 @@ class _StudentDrawerHomeState extends State<StudentDrawerHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amberAccent[400],
       body: FutureBuilder(
         future: studentProfile,
         builder: (context, snapshot) {
@@ -41,7 +40,7 @@ class _StudentDrawerHomeState extends State<StudentDrawerHome> {
                 token: widget.token,
                 student: snapshot.data
               ),
-              menuScreen: MenuPage(token: widget.token),
+              menuScreen: MenuPage(token: widget.token, selectedIndex: 0,),
             );
           } else {
             // If the future is not complete, show a loading indicator or handle accordingly

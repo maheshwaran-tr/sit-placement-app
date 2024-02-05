@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:sit_placement_app/student_pages/drawer/drawer_home.dart';
 import 'package:sit_placement_app/student_pages/student_profile_page/student_profile.dart';
 
 import '../../../backend/requests/auth_request.dart';
@@ -9,8 +10,9 @@ import '../../../home_page/home_page.dart';
 
 class MenuPage extends StatefulWidget {
   final token;
+  final int selectedIndex;
 
-  const MenuPage({Key? key,required this.token}) : super(key: key);
+  const MenuPage({Key? key,required this.token, required this.selectedIndex}) : super(key: key);
 
   @override
   State<MenuPage> createState() => _MenuPageState();
@@ -35,6 +37,14 @@ class MenuOptions {
 class _MenuPageState extends State<MenuPage> {
   int selectedIndex = 0; // Default to the Home page
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      selectedIndex = widget.selectedIndex;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,6 +158,12 @@ class _MenuPageState extends State<MenuPage> {
     });
 
     if (option == MenuOptions.home) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StudentDrawerHome(token: widget.token),
+        ),
+      );
       // Add your logic for Home here
     } else if (option == MenuOptions.profile) {
       Navigator.push(

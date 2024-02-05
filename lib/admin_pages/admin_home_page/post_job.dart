@@ -347,33 +347,41 @@ class _JobPostingScreenState extends State<JobPostingScreen> {
               ),
               SizedBox(height: 20),
               Center(
-                child: Container(
-                  width: 150,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _postJob();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.green,
-                      onPrimary: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _postJob();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.green,
+                            onPrimary: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(FontAwesomeIcons.paperPlane),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text('Post Job', style: TextStyle(fontSize: 18)),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(FontAwesomeIcons.paperPlane),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('Post Job', style: TextStyle(fontSize: 18)),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
               ),
+
+
             ],
           ),
         ),

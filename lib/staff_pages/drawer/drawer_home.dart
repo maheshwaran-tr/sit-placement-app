@@ -23,7 +23,7 @@ class _StaffDrawerHomeState extends State<StaffDrawerHome> {
       body: ZoomDrawer(
         angle: 0.0,
         mainScreen: StaffDash(token: widget.token,),
-        menuScreen: StaffMenuPage(token: widget.token),
+        menuScreen: StaffMenuPage(token: widget.token, selectedIndex: 0,),
       ),
     );
   }

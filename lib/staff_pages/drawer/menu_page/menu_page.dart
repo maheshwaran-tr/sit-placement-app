@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:sit_placement_app/staff_pages/drawer/drawer_home.dart';
 import 'package:sit_placement_app/staff_pages/staff_profile_page/staff_profile.dart';
 
 import '../../../backend/requests/auth_request.dart';
@@ -9,8 +10,8 @@ import '../../../home_page/home_page.dart';
 
 class StaffMenuPage extends StatefulWidget {
   final token;
-
-  const StaffMenuPage({Key? key,required this.token}) : super(key: key);
+  final int selectedIndex;
+  const StaffMenuPage({Key? key,required this.token, required this.selectedIndex}) : super(key: key);
 
   @override
   State<StaffMenuPage> createState() => _StaffMenuPageState();
@@ -33,8 +34,16 @@ class MenuOptions {
 }
 
 class _StaffMenuPageState extends State<StaffMenuPage> {
-  int selectedIndex = 0; // Default to the Home page
+  int selectedIndex = 0; // Default to the Home page// Default to the Home page
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      selectedIndex = widget.selectedIndex;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,6 +157,12 @@ class _StaffMenuPageState extends State<StaffMenuPage> {
     });
 
     if (option == MenuOptions.home) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StaffDrawerHome(token: widget.token),
+        ),
+      );
       // Add your logic for Home here
     } else if (option == MenuOptions.profile) {
       print('Tapped on Profile');

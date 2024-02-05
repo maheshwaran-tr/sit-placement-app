@@ -112,7 +112,7 @@ class _StaffDashState extends State<StaffDash> {
         child: ZoomDrawer(
           controller: _drawerController,
           style: DrawerStyle.defaultStyle,
-          menuScreen: StaffMenuPage(token: widget.token),
+          menuScreen: StaffMenuPage(token: widget.token, selectedIndex: 0,),
           mainScreen: buildMainScreen(),
           borderRadius: 25.0,
           angle: 0, // Adjust the angle for a more dynamic appearance

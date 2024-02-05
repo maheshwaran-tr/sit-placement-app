@@ -94,7 +94,7 @@ class _AdminDashState extends State<AdminDash> {
         child: ZoomDrawer(
           controller: _drawerController,
           style: DrawerStyle.defaultStyle,
-          menuScreen: AdminMenuPage(token: widget.token,),
+          menuScreen: AdminMenuPage(token: widget.token, selectedIndex: 0,),
           mainScreen: buildMainScreen(),
           borderRadius: 25.0,
           angle: 0, // Adjust the angle for a more dynamic appearance

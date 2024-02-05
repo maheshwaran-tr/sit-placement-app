@@ -9,8 +9,9 @@ import '../../../staff_pages/staff_profile_page/staff_profile.dart';
 class AdminMenuPage extends StatefulWidget {
 
   final token;
+  final int selectedIndex;
 
-  const AdminMenuPage({Key? key,required this.token}) : super(key: key);
+  const AdminMenuPage({Key? key,required this.token, required this.selectedIndex}) : super(key: key);
 
   @override
   State<AdminMenuPage> createState() => _AdminMenuPageState();
@@ -34,6 +35,15 @@ class MenuOptions {
 
 class _AdminMenuPageState extends State<AdminMenuPage> {
   int selectedIndex = 0; // Default to the Home page
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      selectedIndex = widget.selectedIndex;
+    });
+  }// Default to the Home page
 
   @override
   Widget build(BuildContext context) {
