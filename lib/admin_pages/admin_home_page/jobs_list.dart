@@ -1,25 +1,23 @@
-// ignore_for_file: library_private_types_in_public_api, prefer_const_literals_to_create_immutables, prefer_const_constructors
-
 import 'package:flutter/material.dart';
+import 'package:sit_placement_app/admin_pages/admin_home_page/student_list_for_applied_jobs.dart';
+import 'package:sit_placement_app/backend/models/job_post_model.dart';
+import 'package:sit_placement_app/backend/models/applied_job_model.dart';
+import 'package:sit_placement_app/backend/requests/job_request.dart';
 
-import '../../backend/models/student_model.dart';
-import '../../backend/requests/student_request.dart';
-import '../../staff_pages/staff_home_page/student_list.dart';
-
-class DepartmentStudentListPage extends StatefulWidget {
+class SelectedJobApplicationList extends StatefulWidget {
 
   final token;
 
-  const DepartmentStudentListPage({super.key,required this.token});
-
+  const SelectedJobApplicationList({super.key,required this.token});
 
   @override
-  _DepartmentStudentListPageState createState() => _DepartmentStudentListPageState();
+  State<SelectedJobApplicationList> createState() => _SelectedJobApplicationListState();
 }
 
-class _DepartmentStudentListPageState extends State<DepartmentStudentListPage> {
-  List<Student> allStudents = [];
-  List<String?> departments = [];
+class _SelectedJobApplicationListState extends State<SelectedJobApplicationList> {
+  List<JobAppliedModel> jobApplications = [];
+  List<JobPostModel> job = [];
+
   String searchText = '';
   var isLoaded = true;
 
@@ -30,41 +28,34 @@ class _DepartmentStudentListPageState extends State<DepartmentStudentListPage> {
   }
 
   Future<void> initializeData() async {
-    List<Student>? students = await StudentRequest.getAllStudents(widget.token);
-    List<Student> willingStudents = students!.where((student) => student.placementWilling == "yes").toList();
+    List<JobPostModel> jobsPosts = await JobRequest.getAllJobs(widget.token);
+    List<JobAppliedModel> applicationList = await JobRequest.getAllApplications(widget.token);
 
-    List<String?> studentDepartments = students!.map((student) => student.department).toSet().toList();
     setState(() {
-      allStudents = willingStudents;
-      departments = studentDepartments;
+      for(var obj in jobsPosts){
+        job.add(obj);
+      }
+      jobApplications = applicationList;
     });
-
   }
 
-  void filterStudentsByDepartment(String selectedDepartment) {
-    final List<Student> filteredStudents = allStudents
-        .where((student) => student.department == selectedDepartment)
-        .toList();
-
+  void filterStudentsByJobs(int jobId) {
+    List<JobAppliedModel> filteredList = jobApplications.where((jobApplied) => jobApplied.jobPost.jobId == jobId && jobApplied.status.statusId == 3).toList();
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => StudentListPage(
-          department: selectedDepartment,
-          students: filteredStudents,
-          token: widget.token,
-        ),
+        builder: (context) => StudentListByAppliedJobs(jobApplications: filteredList),
       ),
     );
   }
 
-  List<String?> getFilteredDepartments() {
+  List<JobPostModel> getFilteredJobs() {
     if (searchText.isEmpty) {
-      return departments;
+      return job;
     } else {
-      return departments
+      return job
           .where(
-              (dept) => dept!.toLowerCase().contains(searchText.toLowerCase()))
+              (tempJob) => tempJob.companyName!.toLowerCase().contains(searchText.toLowerCase()))
           .toList();
     }
   }
@@ -110,7 +101,7 @@ class _DepartmentStudentListPageState extends State<DepartmentStudentListPage> {
                         children: [
 
                           Text(
-                            'Departments',
+                            'Jobs',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 32,
@@ -137,7 +128,7 @@ class _DepartmentStudentListPageState extends State<DepartmentStudentListPage> {
                                     },
                                     style: TextStyle(color: Colors.black),
                                     decoration: InputDecoration(
-                                      hintText: 'Search departments...',
+                                      hintText: 'Search Jobs...',
                                       hintStyle:
                                       TextStyle(color: Colors.grey[600]),
                                       border: InputBorder.none,
@@ -164,12 +155,12 @@ class _DepartmentStudentListPageState extends State<DepartmentStudentListPage> {
                       ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: getFilteredDepartments().length,
+                        itemCount: getFilteredJobs().length,
                         itemBuilder: (context, index) {
-                          final department = getFilteredDepartments()[index];
+                          final filteredJobs = getFilteredJobs()[index];
                           return GestureDetector(
                             onTap: () {
-                              filterStudentsByDepartment(department!);
+                              filterStudentsByJobs(filteredJobs.jobId!);
                             },
                             child: Card(
                               elevation: 4,
@@ -183,7 +174,7 @@ class _DepartmentStudentListPageState extends State<DepartmentStudentListPage> {
                                   MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      department!,
+                                      filteredJobs.companyName!,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -207,4 +198,7 @@ class _DepartmentStudentListPageState extends State<DepartmentStudentListPage> {
       ),
     );
   }
+
+
+
 }

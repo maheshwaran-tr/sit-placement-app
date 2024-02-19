@@ -9,8 +9,6 @@ Student studentFromJson(String str) => Student.fromJson(json.decode(str));
 String studentToJson(Student data) => json.encode(data.toJson());
 
 class Student {
-  final dynamic createdAt;
-  final dynamic lastModifiedAt;
   final int studentId;
   final String rollNo;
   final String regNo;
@@ -44,7 +42,7 @@ class Student {
   final String aadhar;
   final int batch;
   final int currentSem;
-  final String skills;
+  final String? skills;
   final int standingArrears;
   final int historyOfArrears;
   final String viii;
@@ -57,8 +55,6 @@ class Student {
   final String vi;
 
   Student({
-    required this.createdAt,
-    required this.lastModifiedAt,
     required this.studentId,
     required this.rollNo,
     required this.regNo,
@@ -106,8 +102,6 @@ class Student {
   });
 
   factory Student.fromJson(Map<String, dynamic> json) => Student(
-    createdAt: json["createdAt"],
-    lastModifiedAt: json["lastModifiedAt"],
     studentId: json["studentId"],
     rollNo: json["rollNo"],
     regNo: json["regNo"],
@@ -155,8 +149,6 @@ class Student {
   );
 
   Map<String, dynamic> toJson() => {
-    "createdAt": createdAt,
-    "lastModifiedAt": lastModifiedAt,
     "studentId": studentId,
     "rollNo": rollNo,
     "regNo": regNo,

@@ -3,16 +3,17 @@ import 'package:sit_placement_app/backend/requests/student_request.dart';
 
 import '../../backend/models/student_model.dart';
 
-class AddStudentPage extends StatefulWidget {
+class UpdateStudentPage extends StatefulWidget {
   final token;
+  final Student student;
 
-  const AddStudentPage({super.key,required this.token});
+  const UpdateStudentPage({super.key, required this.student,required this.token});
 
   @override
-  _AddStudentPageState createState() => _AddStudentPageState();
+  _UpdateStudentPageState createState() => _UpdateStudentPageState();
 }
 
-class _AddStudentPageState extends State<AddStudentPage> {
+class _UpdateStudentPageState extends State<UpdateStudentPage> {
 
   TextEditingController studentNameController = TextEditingController();
   TextEditingController rollNoController = TextEditingController();
@@ -57,6 +58,53 @@ class _AddStudentPageState extends State<AddStudentPage> {
   TextEditingController sem7gpaController = TextEditingController();
   TextEditingController sem8gpaController = TextEditingController();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    studentNameController.text = widget.student.studentName;
+    rollNoController.text = widget.student.rollNo;
+    regNoController.text = widget.student.regNo;
+    cgpaController.text = widget.student.cgpa.toString();
+    standingArrearController.text = widget.student.standingArrears.toString();
+    historyOfArrearController.text = widget.student.historyOfArrears.toString();
+    departmentController.text = widget.student.department;
+    sectionController.text = widget.student.section;
+    dobController.text = widget.student.dateOfBirth;
+    genderController.text = widget.student.gender;
+    placeOfBirthController.text = widget.student.placeOfBirth;
+    emailController.text = widget.student.email;
+    phoneNumberController.text = widget.student.phoneNumber;
+    permanentAddressController.text = widget.student.permanentAddress;
+    presentAddressController.text = widget.student.presentAddress;
+    communityController.text = widget.student.community;
+    fathernameController.text = widget.student.fatherName;
+    fatheroccupationController.text = widget.student.fatherOccupation;
+    mothernameController.text = widget.student.motherName;
+    motheroccupationController.text = widget.student.motherOccupation;
+    score10thController.text = widget.student.score10Th.toString();
+    board10thController.text = widget.student.board10Th;
+    yearofpassing10thController.text = widget.student.yearOfPassing10Th;
+    score12thController.text = widget.student.score12Th.toString();
+    board12thController.text = widget.student.board12Th;
+    yearofpassing12thController.text = widget.student.yearOfPassing12Th;
+    scorediplomaController.text = widget.student.scoreDiploma;
+    branchdiplomaController.text = widget.student.branchDiploma;
+    yearofpassingdiplomaController.text = widget.student.yearOfPassingDiploma;
+    parentphnoController.text = widget.student.parentPhoneNumber;
+    aadharController.text = widget.student.aadhar;
+    placementwillingController.text = widget.student.placementWilling;
+    batchController.text = widget.student.batch.toString();
+    currentsemController.text = widget.student.currentSem.toString();
+    sem1gpaController.text = widget.student.i;
+    sem2gpaController.text = widget.student.ii;
+    sem3gpaController.text = widget.student.iii;
+    sem4gpaController.text = widget.student.iv;
+    sem5gpaController.text = widget.student.v;
+    sem6gpaController.text = widget.student.vi;
+    sem7gpaController.text = widget.student.vii;
+    sem8gpaController.text = widget.student.viii;
+  }
 
   String errorMessage = "";
   bool isProcessing = false;
@@ -92,8 +140,8 @@ class _AddStudentPageState extends State<AddStudentPage> {
       });
 
       // Perform your submission logic here
-      Student newStudent = Student(
-        studentId: 0,
+      Student updatedStudent = Student(
+        studentId: widget.student.studentId,
         studentName: studentNameController.text,
         department: departmentController.text,
         section: sectionController.text,
@@ -134,12 +182,12 @@ class _AddStudentPageState extends State<AddStudentPage> {
         rollNo: rollNoController.text,
         regNo: regNoController.text,
         cgpa: double.parse(cgpaController.text),
-        skills: null,
+        skills: widget.student.skills,
         standingArrears: int.parse(standingArrearController.text),
         historyOfArrears: int.parse(historyOfArrearController.text),
       );
 
-      bool isAdded = await StudentRequest.addStudent(widget.token,newStudent);
+      bool isUpdated = await StudentRequest.updateStudent(widget.token,updatedStudent);
 
 
       // Reset processing state
@@ -148,47 +196,47 @@ class _AddStudentPageState extends State<AddStudentPage> {
       });
 
 
-      if(isAdded){
+      if(isUpdated){
         // Show a success popup
-        showSuccessDialog("Success","Student Added Successfully",Icons.check_circle,Colors.green);
+        showSuccessDialog("Success","Student Updated Successfully",Icons.check_circle,Colors.green);
         // Clear text fields
-        // studentNameController.clear();
-        // departmentController.clear();
-        // sectionController.clear();
-        // dobController.clear();
-        // genderController.clear();
-        // placeOfBirthController.clear();
-        // emailController.clear();
-        // phoneNumberController.clear();
-        // permanentAddressController.clear();
-        // presentAddressController.clear();
-        // currentsemController.clear();
-        // communityController.clear();
-        // fathernameController.clear();
-        // fatheroccupationController.clear();
-        // mothernameController.clear();
-        // motheroccupationController.clear();
-        // score10thController.clear();
-        // board10thController.clear();
-        // yearofpassing12thController.clear();
-        // scorediplomaController.clear();
-        // branchdiplomaController.clear();
-        // yearofpassingdiplomaController.clear();
-        // parentphnoController.clear();
-        // aadharController.clear();
-        // placementwillingController.clear();
-        // batchController.clear();
-        // sem2gpaController.clear();
-        // sem1gpaController.clear();
-        // sem3gpaController.clear();
-        // sem4gpaController.clear();
-        // sem5gpaController.clear();
-        // sem6gpaController.clear();
-        // sem7gpaController.clear();
-        // sem8gpaController.clear();
+        studentNameController.clear();
+        departmentController.clear();
+        sectionController.clear();
+        dobController.clear();
+        genderController.clear();
+        placeOfBirthController.clear();
+        emailController.clear();
+        phoneNumberController.clear();
+        permanentAddressController.clear();
+        presentAddressController.clear();
+        currentsemController.clear();
+        communityController.clear();
+        fathernameController.clear();
+        fatheroccupationController.clear();
+        mothernameController.clear();
+        motheroccupationController.clear();
+        score10thController.clear();
+        board10thController.clear();
+        yearofpassing12thController.clear();
+        scorediplomaController.clear();
+        branchdiplomaController.clear();
+        yearofpassingdiplomaController.clear();
+        parentphnoController.clear();
+        aadharController.clear();
+        placementwillingController.clear();
+        batchController.clear();
+        sem2gpaController.clear();
+        sem1gpaController.clear();
+        sem3gpaController.clear();
+        sem4gpaController.clear();
+        sem5gpaController.clear();
+        sem6gpaController.clear();
+        sem7gpaController.clear();
+        sem8gpaController.clear();
       }
       else{
-        showSuccessDialog("Failure","Student Not Added",Icons.close_rounded,Colors.red);
+        showSuccessDialog("Failure","Student Not updated",Icons.close_rounded,Colors.red);
       }
     }
   }
@@ -261,7 +309,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
         ),
         title: Center(
           child: Text(
-            "Added Student ",
+            "Update Student ",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),

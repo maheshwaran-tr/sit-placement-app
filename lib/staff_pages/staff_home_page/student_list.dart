@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sit_placement_app/ExcelService/student_excel_service/student_details_excel.dart';
+import 'package:sit_placement_app/backend/requests/student_request.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/student_details.dart';
+import 'package:sit_placement_app/staff_pages/staff_home_page/update_student.dart';
 
 
 import '../../backend/models/student_model.dart';
@@ -9,12 +11,14 @@ import '../../backend/models/student_model.dart';
 
 
 class StudentListPage extends StatefulWidget {
+  final token;
   final String department;
   final List<Student> students;
 
   StudentListPage({
     required this.department,
     required this.students,
+    required this.token,
   });
 
   @override
@@ -378,12 +382,24 @@ class _StudentListPageState extends State<StudentListPage> {
                                   icon: Icon(Icons.edit),
                                   onPressed: () {
                                     // Handle edit action
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => UpdateStudentPage(token:widget.token,student: student)
+                                      )
+                                    );
                                   },
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.delete),
-                                  onPressed: () {
+                                  onPressed: () async{
                                     // Handle delete action
+                                    bool isDeleted = await StudentRequest.deleteStudent(widget.token,student.studentId);
+                                    if(isDeleted){
+                                      print("DELETED");
+                                    }else{
+                                      print("ERROR DELETING");
+                                    }
                                   },
                                 ),
                                 IconButton(

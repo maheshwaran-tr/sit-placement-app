@@ -36,9 +36,10 @@ class _StaffDashState extends State<StaffDash> {
 
   Future<void> intitData() async {
     String dept = await StaffRequest.getStaffDept(widget.token);
-    List<Student> filteredStudents = await StudentRequest.getStudentsByDept(widget.token, dept);
+    List<Student>? allStudents = await StudentRequest.getAllStudents(widget.token);
+    List<Student> willingStudents = allStudents!.where((student) => student.department == dept).toList();
     setState(() {
-      students = filteredStudents;
+      students = willingStudents;
       department = dept;
     });
   }
@@ -199,11 +200,11 @@ class _StaffDashState extends State<StaffDash> {
                     if (catName[index] == "Student List") {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => StudentListPage(department: department, students: students,)),
+                        MaterialPageRoute(builder: (context) => StudentListPage(department: department, students: students,token: widget.token,)),
                       );
                     }else if(catName[index] == "Add Student"){
                       Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddStudentPage()));
+                      MaterialPageRoute(builder: (context) => AddStudentPage(token: widget.token)));
                     }else if(catName[index] == "Job Applied List"){
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => JobAppliedListPage(token: widget.token)));

@@ -23,6 +23,40 @@ class JobRequest {
     }
   }
 
+  static Future<bool> updateTheJob(String token, JobPostModel job) async {
+    var regBody = job.toJson();
+    final response = await http.put(Uri.parse(Urls.updateJobs),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(regBody));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print(response.statusCode);
+      return false;
+    }
+  }
+
+  static Future<bool> deleteJob(String token,int id) async{
+    String deleteJobUrl = "${Urls.deleteJobs}/$id";
+    print(deleteJobUrl);
+    final response = await http.delete(
+      Uri.parse(deleteJobUrl),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if(response.statusCode == 200){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   static Future<List<JobAppliedModel>> getAllApplications(String token) async {
     final response = await http.get(
       Uri.parse(Urls.getAllApplications),

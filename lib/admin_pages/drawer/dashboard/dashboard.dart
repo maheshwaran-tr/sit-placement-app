@@ -10,7 +10,9 @@ import 'package:sit_placement_app/backend/requests/student_request.dart';
 
 import '../../../backend/models/applied_job_model.dart';
 import '../../admin_home_page/job_applications.dart';
+import '../../admin_home_page/jobs_list.dart';
 import '../../admin_home_page/post_job.dart';
+import '../../admin_home_page/posted_jobs.dart';
 import '../menu_page/menu_page.dart';
 
 class AdminDash extends StatefulWidget {
@@ -198,6 +200,11 @@ class _AdminDashState extends State<AdminDash> {
                         context,
                         MaterialPageRoute(builder: (context) => DepartmentStaffListPage(token: widget.token,)),
                       );
+                    }else if(catName[index] == "Posted Job"){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PostedJobsListPage(token: widget.token,)),
+                      );
                     }
                   },
                   child: Column(
@@ -294,11 +301,19 @@ class _AdminDashState extends State<AdminDash> {
 Future<void> _navigateToPage(String pageTitle,String token,BuildContext context) async {
   switch (pageTitle) {
     case 'Job Applied List':
-      List<JobAppliedModel>? applicationsList = await getApprovedStudentsForAdmin(token,1);
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => JobApplicationList(token: token,
+          ),
+        ),
+      );
+      break;
+    case 'Job Selected List':
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SelectedJobApplicationList(token: token,
           ),
         ),
       );

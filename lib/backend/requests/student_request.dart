@@ -7,6 +7,7 @@ import '../models/student_model.dart';
 import '../url_config/urls.dart';
 
 class StudentRequest {
+
   static Future<List<JobAppliedModel>?> getJobAppliedForAllDeptStudents(
       String token, String dept, int statusId) async {
     final response = await http.post(Uri.parse(Urls.studentsByDeptAndStatus),
@@ -104,6 +105,20 @@ class StudentRequest {
     }
   }
 
+  static Future<bool> updateStudent(String token, Student student) async {
+    final response = await http.put(Uri.parse(Urls.updateStudents),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(student.toJson()));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static Future<List<Student>?> getAllStudents(String token) async {
     final response = await http.get(
       Uri.parse(Urls.allStudents),
@@ -126,27 +141,27 @@ class StudentRequest {
     }
   }
 
-  static Future<List<Student>> getStudentsByDept(
-      String token, String dept) async {
-    final response = await http.get(
-      Uri.parse("${Urls.studentsByDept}/$dept"),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-    );
-    if (response.statusCode == 200) {
-      List<dynamic> jsonData = jsonDecode(response.body) as List<dynamic>;
-
-      List<Student> studentsList = [];
-      for (var obj in jsonData) {
-        final pobj = Student.fromJson(obj);
-        studentsList.add(pobj);
-      }
-      return studentsList;
-    }
-    throw Exception("No Students For This Dept");
-  }
+  // static Future<List<Student>> getStudentsByDept(
+  //     String token, String dept) async {
+  //   final response = await http.get(
+  //     Uri.parse("${Urls.studentsByDept}/$dept"),
+  //     headers: {
+  //       'Authorization': 'Bearer $token',
+  //       'Content-Type': 'application/json',
+  //     },
+  //   );
+  //   if (response.statusCode == 200) {
+  //     List<dynamic> jsonData = jsonDecode(response.body) as List<dynamic>;
+  //
+  //     List<Student> studentsList = [];
+  //     for (var obj in jsonData) {
+  //       final pobj = Student.fromJson(obj);
+  //       studentsList.add(pobj);
+  //     }
+  //     return studentsList;
+  //   }
+  //   throw Exception("No Students For This Dept");
+  // }
 
   static Future<bool> updatePlacementWilling(
       String token, Map<String, String> data) async {
@@ -163,24 +178,43 @@ class StudentRequest {
     }
   }
 
-  static Future<List<Student>?> getPWStudents(String token) async {
-    final response = await http.get(
-      Uri.parse("${Urls.studentsByPlacementWilling}/yes"),
+  // static Future<List<Student>?> getPWStudents(String token) async {
+  //   final response = await http.get(
+  //     Uri.parse("${Urls.studentsByPlacementWilling}/yes"),
+  //     headers: {
+  //       'Authorization': 'Bearer $token',
+  //       'Content-Type': 'application/json',
+  //     },
+  //   );
+  //   if (response.statusCode == 200) {
+  //     List<dynamic> jsonData = jsonDecode(response.body) as List<dynamic>;
+  //     List<Student> studentsList = [];
+  //     for (var obj in jsonData) {
+  //       final pobj = Student.fromJson(obj);
+  //       studentsList.add(pobj);
+  //     }
+  //     return studentsList;
+  //   } else {
+  //     return null;
+  //   }
+  // }
+
+  static Future<bool> deleteStudent(String token,int id) async{
+    String deleteStudentUrl = "${Urls.deleteStudents}/$id";
+    print(deleteStudentUrl);
+    final response = await http.delete(
+      Uri.parse(deleteStudentUrl),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
     );
-    if (response.statusCode == 200) {
-      List<dynamic> jsonData = jsonDecode(response.body) as List<dynamic>;
-      List<Student> studentsList = [];
-      for (var obj in jsonData) {
-        final pobj = Student.fromJson(obj);
-        studentsList.add(pobj);
-      }
-      return studentsList;
-    } else {
-      return null;
+    print(response.statusCode);
+    if(response.statusCode == 200){
+      return true;
+    }else{
+      return false;
     }
   }
+
 }

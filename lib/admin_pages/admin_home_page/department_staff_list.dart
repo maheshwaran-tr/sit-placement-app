@@ -5,9 +5,7 @@ import 'package:sit_placement_app/admin_pages/admin_home_page/staff_List_page.da
 import 'package:sit_placement_app/backend/requests/staff_request.dart';
 
 import '../../backend/models/staff_model.dart';
-import '../../backend/models/student_model.dart';
-import '../../backend/requests/student_request.dart';
-import '../../staff_pages/staff_home_page/student_list.dart';
+
 
 class DepartmentStaffListPage extends StatefulWidget {
 
@@ -52,6 +50,7 @@ class _DepartmentStaffListPageState extends State<DepartmentStaffListPage> {
       context,
       MaterialPageRoute(
         builder: (context) => StaffListPage(
+          token: widget.token,
           staffs: filteredStaffs,
         ),
       ),

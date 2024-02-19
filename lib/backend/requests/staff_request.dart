@@ -63,6 +63,40 @@ class StaffRequest {
     }
   }
 
+  static Future<bool> updateStaff(String token, Staff staff) async {
+    final response = await http.put(
+        Uri.parse(Urls.updateStaffs),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(staff.toJson())
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> deleteStaff(String token,int id) async{
+    String deleteStudentUrl = "${Urls.deleteStaffs}/$id";
+    print(deleteStudentUrl);
+    final response = await http.delete(
+      Uri.parse(deleteStudentUrl),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+    print(response.statusCode);
+    if(response.statusCode == 200){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   static Future<List<Staff>?> getAllStaffs(String token) async {
     final response = await http.get(
       Uri.parse(Urls.allStaffs),

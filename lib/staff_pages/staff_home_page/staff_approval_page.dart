@@ -66,8 +66,9 @@ class _ApprovalPageState extends State<ApprovalPage> {
       // Replace 'your_token' and 'your_department' with the actual values
       print(widget.token);
       print(staffDept);
-      List<Student> fetchedStudents =
-      await StudentRequest.getStudentsByDept(widget.token, staffDept!);
+
+      List<Student>? allStudents = await StudentRequest.getAllStudents(widget.token);
+      List<Student> fetchedStudents = allStudents!.where((student) => student.department == staffDept).toList();
 
       // Populate the map with students' roll numbers and default approval status
       studentsWithApprovalStatus = Map.fromIterable(

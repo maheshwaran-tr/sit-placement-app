@@ -10,6 +10,4 @@ class Initializer{
   static Future<Student> initializeStudents(String token) {
     return StudentRequest.getStudentProfile(token);
   }
-
-
 }

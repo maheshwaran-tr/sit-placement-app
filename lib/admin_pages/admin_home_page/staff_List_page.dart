@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sit_placement_app/admin_pages/admin_home_page/staff_details.dart';
+import 'package:sit_placement_app/admin_pages/admin_home_page/update_staff.dart';
+import 'package:sit_placement_app/backend/requests/staff_request.dart';
 import '../../backend/models/staff_model.dart';
 
-
-
 class StaffListPage extends StatefulWidget {
+  final token;
   final List<Staff> staffs;
 
   StaffListPage({
     required this.staffs,
+    required this.token,
   });
 
   @override
@@ -19,7 +21,6 @@ class StaffListPage extends StatefulWidget {
 class _StaffListPageState extends State<StaffListPage> {
   List<Staff> filteredStaffs = [];
   String searchText = '';
-
 
   @override
   void initState() {
@@ -32,36 +33,49 @@ class _StaffListPageState extends State<StaffListPage> {
       filteredStaffs = List.from(widget.staffs);
       if (searchText.isNotEmpty) {
         filteredStaffs = filteredStaffs.where((student) {
-          return student.staffName!.toLowerCase().contains(searchText.toLowerCase());
+          return student.staffName!
+              .toLowerCase()
+              .contains(searchText.toLowerCase());
         }).toList();
       }
+    });
+  }
+
+  Future<void> _refreshStaffList() async {
+    // Simulate fetching data from an external source
+    await Future.delayed(Duration(seconds: 1));
+    // Reset the filtered staff list and the search text
+    setState(() {
+      searchText = '';
+      filteredStaffs = List.from(widget.staffs);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 1,
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          elevation: 1,
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 20,
-              color: Colors.black,
-            ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.black,
           ),
-          title: Text(
-            'Staff Details',
-            style: TextStyle(color: Colors.black),
-          ),
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
-        body: Column(children: [
+        title: Text(
+          'Staff Details',
+          style: TextStyle(color: Colors.black),
+        ),
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
+      ),
+      body: Column(
+        children: [
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
@@ -103,67 +117,92 @@ class _StaffListPageState extends State<StaffListPage> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: filteredStaffs.length,
-              itemBuilder: (context, index) {
-                final staff = filteredStaffs[index];
-                return Card(
-                  elevation: 3,
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: ListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                'Name: ${staff.staffName}',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            child: RefreshIndicator(
+              onRefresh: _refreshStaffList,
+              child: ListView.builder(
+                itemCount: filteredStaffs.length,
+                itemBuilder: (context, index) {
+                  final staff = filteredStaffs[index];
+                  return Card(
+                    elevation: 3,
+                    margin:
+                    EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: ListTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  'Name: ${staff.staffName}',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
-                            Row(
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () {
-                                    // Handle edit action
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.delete),
-                                  onPressed: () {
-                                    // Handle delete action
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.visibility),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            StaffDetailsPage(
-                                                staff: staff,),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Text('Staff Id: ${staff.staffId}',
-                            style: TextStyle(fontSize: 14)),
-                        SizedBox(height: 4),
-                      ],
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.edit),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => UpdateStaffPage(
+                                            token: widget.token,
+                                            staff: staff,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () async {
+                                      // Handle delete action
+                                      bool isDeleted = await StaffRequest.deleteStaff(
+                                          widget.token, staff.staffDbid);
+                                      if (isDeleted) {
+                                        print("DELETED");
+                                        widget.staffs.remove(staff);
+                                      } else {
+                                        print("ERROR DELETING");
+                                      }
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.visibility),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => StaffDetailsPage(
+                                            staff: staff,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Text('Staff Id: ${staff.staffId}',
+                              style: TextStyle(fontSize: 14)),
+                          SizedBox(height: 4),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }
+
