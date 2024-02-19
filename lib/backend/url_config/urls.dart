@@ -1,7 +1,7 @@
 class Urls {
 
     // static const baseurl = "http://192.168.0.13:7070/sit";
-  static const baseurl = "http://10.0.2.2:7070/sit";
+  static const baseurl = "http://52.62.210.139/sit";
 
   // Auth Urls
   static const String loginUser = "$baseurl/auth/login";
