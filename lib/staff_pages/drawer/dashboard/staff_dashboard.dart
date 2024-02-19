@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:sit_placement_app/admin_pages/admin_home_page/job_applications.dart';
+import 'package:sit_placement_app/staff_pages/staff_home_page/PostedJob/JobList.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/add_student.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/job_applied_list.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/staff_approval_page.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/student_list.dart';
 
+import '../../../backend/models/applied_job_model.dart';
+import '../../../backend/models/staff_model.dart';
 import '../../../backend/models/student_model.dart';
 import '../../../backend/requests/staff_request.dart';
 import '../../../backend/requests/student_request.dart';
@@ -26,12 +30,17 @@ class _StaffDashState extends State<StaffDash> {
 
   String department = "";
   List<Student> students = [];
-
+  late Future<Staff> staffFuture;
   @override
   void initState() {
     super.initState();
+    staffFuture = initializeStaff();
     intitData();
 
+  }
+
+  Future<Staff> initializeStaff() async {
+    return StaffRequest.getStaffProfile(widget.token);
   }
 
   Future<void> intitData() async {
@@ -109,15 +118,34 @@ class _StaffDashState extends State<StaffDash> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: ZoomDrawer(
-          controller: _drawerController,
-          style: DrawerStyle.defaultStyle,
-          menuScreen: StaffMenuPage(token: widget.token, selectedIndex: 0,),
-          mainScreen: buildMainScreen(),
-          borderRadius: 25.0,
-          angle: 0, // Adjust the angle for a more dynamic appearance
-          mainScreenScale: 0.2, // Adjust the scale for the main screen
-          slideWidth: MediaQuery.of(context).size.width * 0.8,
+        child: FutureBuilder<Staff>(
+          future: staffFuture,
+          builder: (context,snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              Staff staffData = snapshot.data!;
+              return ZoomDrawer(
+                controller: _drawerController,
+                style: DrawerStyle.defaultStyle,
+                menuScreen: StaffMenuPage(token: widget.token,
+                  selectedIndex: 0,
+                  staffProfile: staffData,),
+                mainScreen: buildMainScreen(),
+                borderRadius: 25.0,
+                angle: 0,
+                // Adjust the angle for a more dynamic appearance
+                mainScreenScale: 0.2,
+                // Adjust the scale for the main screen
+                slideWidth: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.8,
+              );
+            }
+          }
         ),
       ),
     );
@@ -211,6 +239,10 @@ class _StaffDashState extends State<StaffDash> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => ApprovalPage(token: widget.token)));
                     }
+                    else if(catName[index] == "Posted Job"){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => JobListPage(token: widget.token,)));
+                    }
                   },
                   child: Column(
                     children: [
@@ -271,7 +303,7 @@ class _StaffDashState extends State<StaffDash> {
       GestureDetector(
         onTap: () {
           print(title);
-          _navigateToPage(title);
+          _navigateToPage(title,widget.token,context);
         },
         child: Container(
 
@@ -303,7 +335,7 @@ class _StaffDashState extends State<StaffDash> {
         ),
       );
 }
-void _navigateToPage(String pageTitle) {
+Future<void> _navigateToPage(String pageTitle,String token,BuildContext context) async {
   switch (pageTitle) {
   }
 }

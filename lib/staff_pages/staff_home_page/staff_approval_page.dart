@@ -85,7 +85,10 @@ class _ApprovalPageState extends State<ApprovalPage> {
       print("Error loading students data: $e");
     }
   }
-
+  Future<void> _refreshData() async {
+    await Future.delayed(Duration(seconds: 2));
+    await _loadStudentsData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,61 +129,64 @@ class _ApprovalPageState extends State<ApprovalPage> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
-        body: Column(
-          children: [
-            _buildEnhancedContainer(),
-            _buildSearchBar(),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredStudents.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    margin:
-                    EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40.0),
-                    ),
-                    child: ListTile(
-                      leading: Checkbox(
-                        value: filteredStudents[index].isApproved,
-                        onChanged: (value) {
-                          setState(() {
-                            filteredStudents[index].isApproved = value!;
-                          });
-                        },
-                        activeColor: Colors.green,
+        body: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: Column(
+            children: [
+              _buildEnhancedContainer(),
+              _buildSearchBar(),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: filteredStudents.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      margin:
+                      EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40.0),
                       ),
-                      title: Text(
-                          filteredStudents[index].theStudent.studentName ??
-                              "N/A"),
-                      subtitle: Text(
-                          'Section: ${filteredStudents[index].theStudent.section} - Batch: ${filteredStudents[index].theStudent.batch}'),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.edit,
-                                color: Theme.of(context).hintColor),
-                            onPressed: () {
-                              _editStudentDetails(filteredStudents[index]);
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.visibility,
-                                color: Theme.of(context).hintColor),
-                            onPressed: () {
-                              _viewStudentDetails(filteredStudents[index]);
-                            },
-                          ),
-                        ],
+                      child: ListTile(
+                        leading: Checkbox(
+                          value: filteredStudents[index].isApproved,
+                          onChanged: (value) {
+                            setState(() {
+                              filteredStudents[index].isApproved = value!;
+                            });
+                          },
+                          activeColor: Colors.green,
+                        ),
+                        title: Text(
+                            filteredStudents[index].theStudent.studentName ??
+                                "N/A"),
+                        subtitle: Text(
+                            'Section: ${filteredStudents[index].theStudent.section} - Batch: ${filteredStudents[index].theStudent.batch}'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.edit,
+                                  color: Theme.of(context).hintColor),
+                              onPressed: () {
+                                _editStudentDetails(filteredStudents[index]);
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.visibility,
+                                  color: Theme.of(context).hintColor),
+                              onPressed: () {
+                                _viewStudentDetails(filteredStudents[index]);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

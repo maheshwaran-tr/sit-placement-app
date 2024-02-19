@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:sit_placement_app/student_pages/drawer/drawer_home.dart';
 import 'package:sit_placement_app/student_pages/student_profile_page/student_profile.dart';
-
 import '../../../backend/requests/auth_request.dart';
 import '../../../home_page/home_page.dart';
 
@@ -28,14 +26,16 @@ class MenuOption {
 class MenuOptions {
   static final home = MenuOption(Icons.home, "Home");
   static final profile = MenuOption(Icons.person, "Profile");
-  static final setting = MenuOption(Icons.settings, "Setting");
+  static final resume = MenuOption(Icons.file_copy, "Resume");
+  static final changePass = MenuOption(Icons.lock_person, "Change Password");
+  static final about = MenuOption(Icons.info_outline, "About");
   static final logout = MenuOption(Icons.logout, "Logout");
 
-  static final allOptions = [home, profile, setting, logout];
+  static final allOptions = [home, profile, resume,changePass,about, logout];
 }
 
 class _MenuPageState extends State<MenuPage> {
-  int selectedIndex = 0; // Default to the Home page
+  int selectedIndex = 0;
 
   @override
   void initState() {
@@ -174,10 +174,15 @@ class _MenuPageState extends State<MenuPage> {
       );
       print('Tapped on Profile');
       // Add your logic for Profile here
-    } else if (option == MenuOptions.setting) {
+    } else if (option == MenuOptions.resume) {
       print('Tapped on Setting');
       // Add your logic for Setting here
-    } else if (option == MenuOptions.logout) {
+    }
+    else if (option == MenuOptions.changePass) {
+      print('Tapped on Setting');
+      // Add your logic for Setting here
+    }
+    else if (option == MenuOptions.logout) {
       print('Tapped on Logout');
       await AuthRequest.logout(widget.token);
       Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));

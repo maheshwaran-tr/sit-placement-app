@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sit_placement_app/student_pages/drawer/drawer_home.dart';
-
 import '../backend/requests/auth_request.dart';
 import 'forgot_password_page/forgot_password.dart';
 

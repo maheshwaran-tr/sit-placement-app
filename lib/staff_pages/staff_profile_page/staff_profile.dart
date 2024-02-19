@@ -55,16 +55,34 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
       extendBodyBehindAppBar: true,
 
       body: SafeArea(
-
-        child: ZoomDrawer(
-          controller: _drawerController,
-          style: DrawerStyle.defaultStyle,
-          menuScreen: StaffMenuPage(token: widget.token, selectedIndex: 1,),
-          mainScreen: buildMainScreen(),
-          borderRadius: 25.0,
-          angle: 0, // Adjust the angle for a more dynamic appearance
-          mainScreenScale: 0.2, // Adjust the scale for the main screen
-          slideWidth: MediaQuery.of(context).size.width * 0.8,
+        child: FutureBuilder<Staff>(
+          future: staffFuture,
+          builder: (context,snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              Staff staffData = snapshot.data!;
+              return ZoomDrawer(
+                controller: _drawerController,
+                style: DrawerStyle.defaultStyle,
+                menuScreen: StaffMenuPage(token: widget.token,
+                  selectedIndex: 1,
+                  staffProfile: staffData,),
+                mainScreen: buildMainScreen(),
+                borderRadius: 25.0,
+                angle: 0,
+                // Adjust the angle for a more dynamic appearance
+                mainScreenScale: 0.2,
+                // Adjust the scale for the main screen
+                slideWidth: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.8,
+              );
+            }
+          }
         ),
       ),
     );

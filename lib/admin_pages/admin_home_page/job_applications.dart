@@ -202,7 +202,4 @@ class _JobApplicationListState extends State<JobApplicationList> {
       ),
     );
   }
-
-
-
 }

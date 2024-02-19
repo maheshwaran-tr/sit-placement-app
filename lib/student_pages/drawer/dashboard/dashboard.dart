@@ -4,16 +4,15 @@ import 'package:sit_placement_app/backend/models/applied_job_model.dart';
 import 'package:sit_placement_app/backend/models/student_model.dart';
 import 'package:sit_placement_app/backend/requests/student_request.dart';
 import 'package:sit_placement_app/student_pages/student_home_page/job_list_page.dart';
-
-
 import '../../student_home_page/upload_status.dart';
 import '../menu_page/menu_page.dart';
-
 
 class DashBoard extends StatefulWidget {
   final token;
   final Student? student;
-  const DashBoard({Key? key,required this.token,required this.student}) : super(key: key);
+
+  const DashBoard({Key? key, required this.token, required this.student})
+      : super(key: key);
 
   @override
   State<DashBoard> createState() => _DashBoardState();
@@ -33,11 +32,13 @@ class _DashBoardState extends State<DashBoard> {
     initialize();
   }
 
-  void initialize() async{
-    List<JobAppliedModel>? newList= await StudentRequest.getJobsAppliedByStudents(widget.token, widget.student!.studentId);
+  void initialize() async {
+    List<JobAppliedModel>? newList =
+        await StudentRequest.getJobsAppliedByStudents(
+            widget.token, widget.student!.studentId);
     setState(() {
-      jobAppliedList = newList??[];
-      for(var jobApplication in jobAppliedList){
+      jobAppliedList = newList ?? [];
+      for (var jobApplication in jobAppliedList) {
         print(jobApplication);
         attendedCompanies.add(jobApplication.jobPost.companyName);
         companyStatus.add(jobApplication.status.statusName);
@@ -92,21 +93,18 @@ class _DashBoardState extends State<DashBoard> {
     "Apply Job",
   ];
 
-
-
-
   static const Map<String, IconData> companyStatusIcons = {
     "Selected": Icons.check_circle,
     "Not Selected": Icons.cancel,
     "Waiting for Result": Icons.access_time,
-    "Not Attended":Icons.not_interested
+    "Not Attended": Icons.not_interested
   };
 
   static const Map<String, Color> companyStatusColors = {
     "Selected": Colors.green,
     "Not Selected": Colors.red,
     "Waiting for Result": Colors.grey,
-    "Not Attended":Colors.amber
+    "Not Attended": Colors.amber
   };
 
   @override
@@ -114,20 +112,22 @@ class _DashBoardState extends State<DashBoard> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-
         child: ZoomDrawer(
           controller: _drawerController,
           style: DrawerStyle.defaultStyle,
-          menuScreen: MenuPage(token: widget.token,selectedIndex: 0,),
+          menuScreen: MenuPage(
+            token: widget.token,
+            selectedIndex: 0,
+          ),
           mainScreen: buildMainScreen(),
           borderRadius: 25.0,
-          angle: 0, // Adjust the angle for a more dynamic appearance
-          mainScreenScale: 0.2, // Adjust the scale for the main screen
+          angle: 0,
+          // Adjust the angle for a more dynamic appearance
+          mainScreenScale: 0.2,
+          // Adjust the scale for the main screen
           slideWidth: MediaQuery.of(context).size.width * 0.8,
         ),
-
       ),
-
     );
   }
 
@@ -154,15 +154,16 @@ class _DashBoardState extends State<DashBoard> {
                       onTap: () {
                         _drawerController.toggle!();
                       },
-                      child: Icon(Icons.dashboard_customize_rounded, size: 30, color: Colors.white),
+                      child: Icon(Icons.dashboard_customize_rounded,
+                          size: 30, color: Colors.white),
                     ),
                     GestureDetector(
                       onTap: () {
-
                         // Add your logic for the second icon press
                         print("Notification Icon Pressed");
                       },
-                      child: Icon(Icons.notification_add_rounded, size: 30, color: Colors.white),
+                      child: Icon(Icons.notification_add_rounded,
+                          size: 30, color: Colors.white),
                     ),
                   ],
                 ),
@@ -171,10 +172,18 @@ class _DashBoardState extends State<DashBoard> {
                   padding: EdgeInsets.only(left: 3, right: 15),
                   child: ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 30),
-                    title: Text('Hello!', style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white)),
+                    title: Text('Hello!',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall
+                            ?.copyWith(color: Colors.white)),
                     subtitle: Row(
                       children: [
-                        Text(_getGreeting(), style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white54)),
+                        Text(_getGreeting(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(color: Colors.white54)),
                         Icon(
                           _getIconForGreeting(),
                           color: Colors.white,
@@ -211,12 +220,16 @@ class _DashBoardState extends State<DashBoard> {
                     } else if (catName[index] == "Upload Status") {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => UploadStatusPage()),
+                        MaterialPageRoute(
+                            builder: (context) => UploadStatusPage()),
                       );
                     } else if (catName[index] == "Apply Job") {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => JobListPage(token: widget.token, studentProfile: widget.student)),
+                        MaterialPageRoute(
+                            builder: (context) => JobListPage(
+                                token: widget.token,
+                                studentProfile: widget.student)),
                       );
                     }
                   },
@@ -236,7 +249,10 @@ class _DashBoardState extends State<DashBoard> {
                       SizedBox(height: 10),
                       Text(
                         catName[index],
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black.withOpacity(0.7)),
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black.withOpacity(0.7)),
                       ),
                     ],
                   ),
@@ -266,8 +282,14 @@ class _DashBoardState extends State<DashBoard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Attended Companies", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21)),
-                    Text("Count: ${attendedCompanies.length}", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16, color: Colors.blue)),
+                    Text("Attended Companies",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 21)),
+                    Text("Count: ${attendedCompanies.length}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                            color: Colors.blue)),
                   ],
                 ),
                 SizedBox(height: 10),
@@ -275,71 +297,80 @@ class _DashBoardState extends State<DashBoard> {
                   height: MediaQuery.of(context).size.height * 0.4,
                   child: attendedCompanies.isEmpty
                       ? Center(
-                    child: Text(
-                      "No attended companies yet.",
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
-                    ),
-                  )
-                      : ListView.builder(
-                    itemCount: attendedCompanies.length,
-                    shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[50],
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: ListTile(
-                          title: Text(attendedCompanies[index], style: TextStyle(fontWeight: FontWeight.bold)),
-                          subtitle: Row(
-                            children: [
-                              Icon(
-                                companyStatusIcons[companyStatus[index]] ?? Icons.info,
-                                color: companyStatusColors[companyStatus[index]] ?? Colors.black,
-                              ),
-                              SizedBox(width: 8),
-                              Text("Status: ${companyStatus[index]}", style: TextStyle(fontWeight: FontWeight.w500)),
-                              Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text("Full Details"),
-                                        content: Text(
-                                          "Details for ${attendedCompanies[index]}",
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("Close"),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Icon(Icons.remove_red_eye, color: Colors.blue),
-                              ),
-                            ],
+                          child: Text(
+                            "No attended companies yet.",
+                            style: TextStyle(fontSize: 18, color: Colors.grey),
                           ),
+                        )
+                      : ListView.builder(
+                          itemCount: attendedCompanies.length,
+                          shrinkWrap: true,
+                          physics: BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[50],
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: ListTile(
+                                title: Text(attendedCompanies[index],
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                subtitle: Row(
+                                  children: [
+                                    Icon(
+                                      companyStatusIcons[
+                                              companyStatus[index]] ??
+                                          Icons.info,
+                                      color: companyStatusColors[
+                                              companyStatus[index]] ??
+                                          Colors.black,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text("Status: ${companyStatus[index]}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500)),
+                                    Spacer(),
+                                    GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text("Full Details"),
+                                              content: Text(
+                                                "Details for ${attendedCompanies[index]}",
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text("Close"),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Icon(Icons.remove_red_eye,
+                                          color: Colors.blue),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
               ],
             ),
