@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 import '../../../backend/models/staff_model.dart';
 import '../../../backend/models/student_model.dart';
 import '../../backend/requests/staff_request.dart';
@@ -74,18 +73,22 @@ class _ApprovalPageState extends State<ApprovalPage> {
       studentsWithApprovalStatus = Map.fromIterable(
         fetchedStudents,
         key: (student) => student.rollNo!,
-        value: (student) => "yes", // Assuming default approval status is 'yes'
+        value: (student) => student.placementWilling == "yes" ? "yes" : "no",
       );
 
       setState(() {
         students = fetchedStudents
-            .map((student) => StudentApprovalClass(theStudent: student))
+            .map((student) => StudentApprovalClass(
+          theStudent: student,
+          isApproved: student.placementWilling == "yes",
+        ))
             .toList();
       });
     } catch (e) {
       print("Error loading students data: $e");
     }
   }
+
 
 
   @override

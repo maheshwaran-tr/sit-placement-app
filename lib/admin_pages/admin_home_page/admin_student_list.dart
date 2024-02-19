@@ -10,26 +10,27 @@ import '../../backend/models/student_model.dart';
 
 
 
-class StudentListPage extends StatefulWidget {
+class AdminStudentListPage extends StatefulWidget {
   final token;
   final String department;
   final List<Student> students;
 
-  StudentListPage({
+  AdminStudentListPage({
     required this.department,
     required this.students,
     required this.token,
   });
 
   @override
-  _StudentListPageState createState() => _StudentListPageState();
+  _AdminStudentListPageState createState() => _AdminStudentListPageState();
 }
 
-class _StudentListPageState extends State<StudentListPage> {
+class _AdminStudentListPageState extends State<AdminStudentListPage> {
   List<Student> filteredStudents = [];
   List<int> selectedBatchList = [];
   List<String> selectedSkillsList = [];
   String searchText = '';
+
 
   List<int> batchYears = [2023, 2022, 2021]; // List of available batch years
   List<String> skillsList = [
@@ -41,7 +42,10 @@ class _StudentListPageState extends State<StudentListPage> {
   @override
   void initState() {
     super.initState();
-    filteredStudents = List.from(widget.students);
+    // Add condition to filter by department and placement willingness
+    filteredStudents = widget.students.where((student) {
+      return student.department == widget.department && student.placementWilling == "yes";
+    }).toList();
   }
 
   void filterStudents() {
@@ -52,12 +56,16 @@ class _StudentListPageState extends State<StudentListPage> {
         }).toList();
       } else if (selectedSkillsList.isNotEmpty) {
         filteredStudents = widget.students.where((student) {
-          return selectedSkillsList
-              .any((skill) => student.skills!.contains(skill));
+          return selectedSkillsList.any((skill) => student.skills!.contains(skill));
         }).toList();
       } else {
         filteredStudents = List.from(widget.students);
       }
+
+      // Add condition to filter by department and placement willingness
+      // filteredStudents = filteredStudents.where((student) {
+      //   return student.department == widget.department && student.placementWilling == "yes";
+      // }).toList();
 
       if (searchText.isNotEmpty) {
         filteredStudents = filteredStudents.where((student) {
@@ -66,6 +74,7 @@ class _StudentListPageState extends State<StudentListPage> {
       }
     });
   }
+
 
   void downloadData() async{
     // Implement download functionality here...
@@ -383,10 +392,10 @@ class _StudentListPageState extends State<StudentListPage> {
                                   onPressed: () {
                                     // Handle edit action
                                     Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => UpdateStudentPage(token:widget.token,student: student)
-                                      )
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => UpdateStudentPage(token:widget.token,student: student)
+                                        )
                                     );
                                   },
                                 ),

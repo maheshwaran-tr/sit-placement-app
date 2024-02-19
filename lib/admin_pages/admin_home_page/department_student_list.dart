@@ -1,10 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api, prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:sit_placement_app/admin_pages/admin_home_page/admin_student_list.dart';
 
 import '../../backend/models/student_model.dart';
 import '../../backend/requests/student_request.dart';
-import '../../staff_pages/staff_home_page/student_list.dart';
+import '../../staff_pages/staff_home_page/staff_student_list.dart';
 
 class DepartmentStudentListPage extends StatefulWidget {
 
@@ -49,7 +50,7 @@ class _DepartmentStudentListPageState extends State<DepartmentStudentListPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => StudentListPage(
+        builder: (context) => AdminStudentListPage(
           department: selectedDepartment,
           students: filteredStudents,
           token: widget.token,

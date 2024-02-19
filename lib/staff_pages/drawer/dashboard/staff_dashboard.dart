@@ -4,7 +4,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/add_student.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/job_applied_list.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/staff_approval_page.dart';
-import 'package:sit_placement_app/staff_pages/staff_home_page/student_list.dart';
+import 'package:sit_placement_app/staff_pages/staff_home_page/staff_student_list.dart';
 
 import '../../../backend/models/student_model.dart';
 import '../../../backend/requests/staff_request.dart';
@@ -37,7 +37,7 @@ class _StaffDashState extends State<StaffDash> {
   Future<void> intitData() async {
     String dept = await StaffRequest.getStaffDept(widget.token);
     List<Student>? allStudents = await StudentRequest.getAllStudents(widget.token);
-    List<Student> willingStudents = allStudents!.where((student) => student.department == dept).toList();
+    List<Student> willingStudents = allStudents!.where((student) => student.department == dept && student.placementWilling == "yes").toList();
     setState(() {
       students = willingStudents;
       department = dept;
@@ -101,8 +101,7 @@ class _StaffDashState extends State<StaffDash> {
     "Student List",
     "Posted Job",
     "Add Student",
-    "Job Applied List",
-
+    "Job Applied List"
   ];
 
   @override
@@ -200,7 +199,7 @@ class _StaffDashState extends State<StaffDash> {
                     if (catName[index] == "Student List") {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => StudentListPage(department: department, students: students,token: widget.token,)),
+                        MaterialPageRoute(builder: (context) => StaffStudentListPage(department: department,token: widget.token,)),
                       );
                     }else if(catName[index] == "Add Student"){
                       Navigator.push(context,
