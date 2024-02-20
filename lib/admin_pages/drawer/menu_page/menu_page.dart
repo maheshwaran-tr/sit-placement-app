@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:sit_placement_app/admin_pages/AdminProfilePage/adminProfile.dart';
+import 'package:sit_placement_app/admin_pages/drawer/drawer_home.dart';
+import '../../../backend/models/staff_model.dart';
 import '../../../backend/requests/auth_request.dart';
 import '../../../home_page/home_page.dart';
 import '../../../staff_pages/staff_profile_page/staff_profile.dart';
@@ -9,8 +11,10 @@ import '../../../staff_pages/staff_profile_page/staff_profile.dart';
 class AdminMenuPage extends StatefulWidget {
 
   final token;
+  final int selectedIndex;
+  final Staff staffProfile;
 
-  const AdminMenuPage({Key? key,required this.token}) : super(key: key);
+  const AdminMenuPage({Key? key,required this.token, required this.selectedIndex, required this.staffProfile}) : super(key: key);
 
   @override
   State<AdminMenuPage> createState() => _AdminMenuPageState();
@@ -36,9 +40,18 @@ class _AdminMenuPageState extends State<AdminMenuPage> {
   int selectedIndex = 0; // Default to the Home page
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      selectedIndex = widget.selectedIndex;
+    });
+  }// Default to the Home page
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF9F8F4),
+      backgroundColor: Color(0xE3FFFFE1),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -70,7 +83,7 @@ class _AdminMenuPageState extends State<AdminMenuPage> {
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children:  [
                     Text(
                       "Hello,",
                       style: TextStyle(
@@ -80,9 +93,9 @@ class _AdminMenuPageState extends State<AdminMenuPage> {
                       ),
                     ),
                     Text(
-                      "Justin",
+                      widget.staffProfile.staffName,
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 16,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
@@ -148,13 +161,20 @@ class _AdminMenuPageState extends State<AdminMenuPage> {
     });
 
     if (option == MenuOptions.home) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AdminDrawerHome(token: widget.token),
+        ),
+      );
+
       // Add your logic for Home here
     } else if (option == MenuOptions.profile) {
       print('Tapped on Profile');
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => StaffProfilePage(token: widget.token),
+          builder: (context) => AdminProfilePage(token: widget.token),
         ),
       );
       // Add your logic for Profile here

@@ -4,12 +4,13 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/add_student.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/job_applied_list.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/staff_approval_page.dart';
-import 'package:sit_placement_app/staff_pages/staff_home_page/student_list.dart';
-
+import 'package:sit_placement_app/staff_pages/staff_home_page/staff_posted_job.dart';
+import 'package:sit_placement_app/staff_pages/staff_home_page/staff_student_list.dart';
 import '../../../backend/models/student_model.dart';
 import '../../../backend/requests/staff_request.dart';
 import '../../../backend/requests/student_request.dart';
 import '../menu_page/menu_page.dart';
+import '../../../backend/models/staff_model.dart';
 
 
 class StaffDash extends StatefulWidget {
@@ -26,18 +27,24 @@ class _StaffDashState extends State<StaffDash> {
 
   String department = "";
   List<Student> students = [];
+  late Future<Staff> staffFuture;
 
   @override
   void initState() {
+
     super.initState();
+    staffFuture = initializeStaff();
     intitData();
 
+  }
+  Future<Staff> initializeStaff() async {
+    return StaffRequest.getStaffProfile(widget.token);
   }
 
   Future<void> intitData() async {
     String dept = await StaffRequest.getStaffDept(widget.token);
     List<Student>? allStudents = await StudentRequest.getAllStudents(widget.token);
-    List<Student> willingStudents = allStudents!.where((student) => student.department == dept).toList();
+    List<Student> willingStudents = allStudents!.where((student) => student.department == dept && student.placementWilling == "yes").toList();
     setState(() {
       students = willingStudents;
       department = dept;
@@ -97,12 +104,11 @@ class _StaffDashState extends State<StaffDash> {
   ];
 
   List catName = [
-    "Approval Page",
+    "Placement Willing",
     "Student List",
     "Posted Job",
     "Add Student",
-    "Job Applied List",
-
+    "Job Applied List"
   ];
 
   @override
@@ -110,15 +116,34 @@ class _StaffDashState extends State<StaffDash> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: ZoomDrawer(
-          controller: _drawerController,
-          style: DrawerStyle.defaultStyle,
-          menuScreen: StaffMenuPage(token: widget.token),
-          mainScreen: buildMainScreen(),
-          borderRadius: 25.0,
-          angle: 0, // Adjust the angle for a more dynamic appearance
-          mainScreenScale: 0.2, // Adjust the scale for the main screen
-          slideWidth: MediaQuery.of(context).size.width * 0.8,
+        child: FutureBuilder<Staff>(
+            future: staffFuture,
+            builder: (context,snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                Staff staffData = snapshot.data!;
+                return ZoomDrawer(
+                  controller: _drawerController,
+                  style: DrawerStyle.defaultStyle,
+                  menuScreen: StaffMenuPage(token: widget.token,
+                    selectedIndex: 0,
+                    staffProfile: staffData,),
+                  mainScreen: buildMainScreen(),
+                  borderRadius: 25.0,
+                  angle: 0,
+                  // Adjust the angle for a more dynamic appearance
+                  mainScreenScale: 0.2,
+                  // Adjust the scale for the main screen
+                  slideWidth: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.8,
+                );
+              }
+            }
         ),
       ),
     );
@@ -200,7 +225,7 @@ class _StaffDashState extends State<StaffDash> {
                     if (catName[index] == "Student List") {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => StudentListPage(department: department, students: students,token: widget.token,)),
+                        MaterialPageRoute(builder: (context) => StaffStudentListPage(department: department,token: widget.token,)),
                       );
                     }else if(catName[index] == "Add Student"){
                       Navigator.push(context,
@@ -208,9 +233,12 @@ class _StaffDashState extends State<StaffDash> {
                     }else if(catName[index] == "Job Applied List"){
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => JobAppliedListPage(token: widget.token)));
-                    }else if(catName[index] == "Approval Page"){
+                    }else if(catName[index] == "Placement Willing"){
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => ApprovalPage(token: widget.token)));
+                    }else if(catName[index] == "Posted Job"){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => StaffPostedJobsListPage(token: widget.token)));
                     }
                   },
                   child: Column(

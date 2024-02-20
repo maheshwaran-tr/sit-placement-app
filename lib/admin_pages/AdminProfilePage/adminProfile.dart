@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:sit_placement_app/admin_pages/drawer/menu_page/menu_page.dart';
 import 'package:sit_placement_app/staff_pages/drawer/menu_page/menu_page.dart';
 
 import '../../backend/models/staff_model.dart';
 import '../../backend/requests/staff_request.dart';
 
 
-class StaffProfilePage extends StatefulWidget {
+class AdminProfilePage extends StatefulWidget {
   final token;
 
-  const StaffProfilePage({super.key, required this.token});
+  const AdminProfilePage({super.key, required this.token});
 
   @override
-  State<StaffProfilePage> createState() => _StaffProfilePageState();
+  State<AdminProfilePage> createState() => _AdminProfilePageState();
 }
 
-class _StaffProfilePageState extends State<StaffProfilePage> {
+class _AdminProfilePageState extends State<AdminProfilePage> {
   final _drawerController = ZoomDrawerController();
   late Future<Staff> staffFuture;
 
@@ -67,7 +68,7 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
                 return ZoomDrawer(
                   controller: _drawerController,
                   style: DrawerStyle.defaultStyle,
-                  menuScreen: StaffMenuPage(token: widget.token,
+                  menuScreen: AdminMenuPage(token: widget.token,
                     selectedIndex: 1,
                     staffProfile: staffData,),
                   mainScreen: buildMainScreen(),

@@ -5,11 +5,24 @@ import 'package:flutter/services.dart';
 
 import '../../backend/models/student_model.dart';
 
-class StudentDetailsPage extends StatelessWidget {
+class StudentDetailsPage extends StatefulWidget {
   final Student student;
+
 
   StudentDetailsPage({required this.student});
 
+  @override
+  State<StudentDetailsPage> createState() => _StudentDetailsPageState();
+}
+
+class _StudentDetailsPageState extends State<StudentDetailsPage> {
+
+
+  Future<void> _refreshData() async {
+    // Simulate fetching updated data
+    await Future.delayed(Duration(seconds: 2));
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +41,7 @@ class StudentDetailsPage extends StatelessWidget {
           ),
         ),
         title: Text(
-          (student.studentName??"N/A") + " Details",
+          (widget.student.studentName??"N/A") + " Details",
           style: TextStyle(color: Colors.black),
         ),
         actions: [
@@ -53,42 +66,45 @@ class StudentDetailsPage extends StatelessWidget {
         ],
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildDetailCard(
-              'Name',
-              student.studentName??"N/A",
-              icon: Icons.person,
-              iconColor: Colors.blue,
-            ),
-            SizedBox(height: 12.0),
-            _buildDetailCard(
-              'Department',
-              student.department??"N/A",
-              icon: Icons.business,
-              iconColor: Colors.orange,
-            ),
-            SizedBox(height: 12.0),
-            _buildDetailCard(
-              'Registration Number',
-              student.regNo.toString(),
-              icon: Icons.confirmation_number,
-              iconColor: Colors.green,
-            ),
-            SizedBox(height: 12.0),
-            _buildDetailCard(
-              'Batch Number',
-              student.batch.toString(),
-              icon: Icons.format_list_numbered,
-              iconColor: Colors.purple,
-            ),
-            SizedBox(height: 12.0),
-            _buildSkillsSection(convertStringToList(student.skills)??[]),
-            // Add more sections or details here...
-          ],
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildDetailCard(
+                'Name',
+                widget.student.studentName??"N/A",
+                icon: Icons.person,
+                iconColor: Colors.blue,
+              ),
+              SizedBox(height: 12.0),
+              _buildDetailCard(
+                'Department',
+                widget.student.department??"N/A",
+                icon: Icons.business,
+                iconColor: Colors.orange,
+              ),
+              SizedBox(height: 12.0),
+              _buildDetailCard(
+                'Registration Number',
+                widget.student.regNo.toString(),
+                icon: Icons.confirmation_number,
+                iconColor: Colors.green,
+              ),
+              SizedBox(height: 12.0),
+              _buildDetailCard(
+                'Batch Number',
+                widget.student.batch.toString(),
+                icon: Icons.format_list_numbered,
+                iconColor: Colors.purple,
+              ),
+              SizedBox(height: 12.0),
+              _buildSkillsSection(convertStringToList(widget.student.skills)??[]),
+              // Add more sections or details here...
+            ],
+          ),
         ),
       ),
     );
@@ -194,6 +210,7 @@ class StudentDetailsPage extends StatelessWidget {
       ),
     );
   }
+
   List<dynamic>? convertStringToList(String? input) {
     if (input == null) {
       // Handle the case where input is null

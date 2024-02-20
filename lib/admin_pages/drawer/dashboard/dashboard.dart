@@ -6,9 +6,9 @@ import 'package:sit_placement_app/admin_pages/admin_home_page/add_staff.dart';
 import 'package:sit_placement_app/admin_pages/admin_home_page/department_staff_list.dart';
 import 'package:sit_placement_app/admin_pages/admin_home_page/department_student_list.dart';
 import 'package:sit_placement_app/backend/requests/student_request.dart';
-
-
 import '../../../backend/models/applied_job_model.dart';
+import '../../../backend/models/staff_model.dart';
+import '../../../backend/requests/staff_request.dart';
 import '../../admin_home_page/job_applications.dart';
 import '../../admin_home_page/jobs_list.dart';
 import '../../admin_home_page/post_job.dart';
@@ -28,8 +28,18 @@ class AdminDash extends StatefulWidget {
 class _AdminDashState extends State<AdminDash> {
 
 
-
+  late Future<Staff> staffFuture;
   final _drawerController = ZoomDrawerController();
+
+  @override
+  void initState() {
+
+    super.initState();
+    staffFuture = initializeStaff();
+  }
+  Future<Staff> initializeStaff() async {
+    return StaffRequest.getStaffProfile(widget.token);
+  }
 
   String _getGreeting() {
     var hour = DateTime.now().hour;
@@ -85,7 +95,6 @@ class _AdminDashState extends State<AdminDash> {
     "Add Staff",
     "Posted Job",
     "Staff List",
-
   ];
 
   @override
@@ -93,20 +102,38 @@ class _AdminDashState extends State<AdminDash> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: ZoomDrawer(
-          controller: _drawerController,
-          style: DrawerStyle.defaultStyle,
-          menuScreen: AdminMenuPage(token: widget.token,),
-          mainScreen: buildMainScreen(),
-          borderRadius: 25.0,
-          angle: 0, // Adjust the angle for a more dynamic appearance
-          mainScreenScale: 0.2, // Adjust the scale for the main screen
-          slideWidth: MediaQuery.of(context).size.width * 0.8,
+        child: FutureBuilder<Staff>(
+            future: staffFuture,
+            builder: (context,snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                Staff staffData = snapshot.data!;
+                return ZoomDrawer(
+                  controller: _drawerController,
+                  style: DrawerStyle.defaultStyle,
+                  menuScreen: AdminMenuPage(token: widget.token,
+                    selectedIndex: 0,
+                    staffProfile: staffData,),
+                  mainScreen: buildMainScreen(),
+                  borderRadius: 25.0,
+                  angle: 0,
+                  // Adjust the angle for a more dynamic appearance
+                  mainScreenScale: 0.2,
+                  // Adjust the scale for the main screen
+                  slideWidth: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.8,
+                );
+              }
+            }
         ),
       ),
     );
   }
-
   Widget buildMainScreen() {
     return SingleChildScrollView(
       child: Column(

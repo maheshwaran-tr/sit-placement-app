@@ -1,9 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:sit_placement_app/student_pages/drawer/menu_page/menu_page.dart';
 
 import '../../backend/models/student_model.dart';
 import '../../backend/requests/student_request.dart';
+
 
 class StudentProfilePage extends StatefulWidget {
   final token;
@@ -15,6 +19,7 @@ class StudentProfilePage extends StatefulWidget {
 }
 
 class _StudentProfilePageState extends State<StudentProfilePage> {
+  final _drawerController = ZoomDrawerController();
   late Future<Student> studentFuture;
   bool isContactExpanded = false;
 
@@ -33,20 +38,42 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Student Profile',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
+        elevation: 0,
+        backgroundColor: Colors.lightBlueAccent,
+        leading: IconButton(
+          onPressed: () {
+            _drawerController.toggle!();
+          },
+          icon: Icon(
+            Icons.dashboard_customize_rounded,
+            size: 30,
+            color: Colors.black,
           ),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        title: Center(child: Text('Student Profile',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),)),
       ),
       extendBodyBehindAppBar: true,
-      body: Container(
+
+      body: SafeArea(
+
+        child: ZoomDrawer(
+          controller: _drawerController,
+          style: DrawerStyle.defaultStyle,
+          menuScreen: MenuPage(token: widget.token, selectedIndex: 1,),
+          mainScreen: buildMainScreen(),
+          borderRadius: 25.0,
+          angle: 0, // Adjust the angle for a more dynamic appearance
+          mainScreenScale: 0.2, // Adjust the scale for the main screen
+          slideWidth: MediaQuery.of(context).size.width * 0.8,
+        ),
+      ),
+    );
+  }
+
+  Widget buildMainScreen() {
+    return SingleChildScrollView(
+      child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -75,7 +102,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    SizedBox(height: 95),
+                    SizedBox(height: 45),
                     Center(
                       child: Stack(
                         children: [
@@ -188,8 +215,11 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
           },
         ),
       ),
+
     );
+
   }
+
 
   Widget buildExpansionTile({
     required String title,

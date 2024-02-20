@@ -3,6 +3,7 @@ class Urls {
     static const baseurl = "http://52.62.210.139/sit";  // LIVE
   //static const baseurl = "http://10.0.2.2:8080/sit";    // TEST
 
+
   // Auth Urls
   static const String loginUser = "$baseurl/auth/login";
   static const String registerUser = "$baseurl/auth/register";

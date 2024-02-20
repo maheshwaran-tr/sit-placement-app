@@ -26,7 +26,10 @@ class _JobAppliedListPageState extends State<JobAppliedListPage> {
     super.initState();
     initData();
   }
-
+  Future<void> _refreshData() async {
+    await Future.delayed(Duration(seconds: 2));
+    await initData();
+  }
   Future<void> initData() async {
     department = await StaffRequest.getStaffDept(widget.token);
     print(department);
@@ -71,85 +74,88 @@ class _JobAppliedListPageState extends State<JobAppliedListPage> {
       ),
       body: Padding(
         padding: EdgeInsets.only(top: 10),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.separated(
-                itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 3,
+        child: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.all(8),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.blueAccent,
+                          child: Icon(
+                            Icons.work,
+                            color: Colors.white,
+                          ),
+                        ),
+                        title: Text(
+                          studentApplication[index].jobApplication.student.studentName,
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Text(
+                            'Applied to: ${studentApplication[index].jobApplication.jobPost.companyName}',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                        ),
+                        trailing: Checkbox(
+                          value: studentApplication[index].isApproved,
+                          activeColor: Colors.green,
+                          onChanged: (value) {
+                            setState(() {
+                              studentApplication[index].isApproved = value!;
+                            });
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) => SizedBox(height: 5),
+                  itemCount: studentApplication.length,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(20),
+                child: ElevatedButton.icon(
+                  onPressed: isAnyStudentSelected()
+                      ? () => showApprovalMessage(context)
+                      : null,
+                  icon: Icon(
+                    Icons.check,
+                    size: 24,
+                  ),
+                  label: Text(
+                    'Approve Selected',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    onPrimary: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(8),
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.blueAccent,
-                        child: Icon(
-                          Icons.work,
-                          color: Colors.white,
-                        ),
-                      ),
-                      title: Text(
-                        studentApplication[index].jobApplication.student.studentName,
-                        style: TextStyle(
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Text(
-                          'Applied to: ${studentApplication[index].jobApplication.jobPost.companyName}',
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                      ),
-                      trailing: Checkbox(
-                        value: studentApplication[index].isApproved,
-                        activeColor: Colors.green,
-                        onChanged: (value) {
-                          setState(() {
-                            studentApplication[index].isApproved = value!;
-                          });
-                        },
-                      ),
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) => SizedBox(height: 5),
-                itemCount: studentApplication.length,
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.all(20),
-              child: ElevatedButton.icon(
-                onPressed: isAnyStudentSelected()
-                    ? () => showApprovalMessage(context)
-                    : null,
-                icon: Icon(
-                  Icons.check,
-                  size: 24,
-                ),
-                label: Text(
-                  'Approve Selected',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
-                  onPrimary: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -289,7 +289,10 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> {
       },
     );
   }
+  Future<void> _refreshData() async {
+    await Future.delayed(Duration(seconds: 2));
 
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -317,100 +320,103 @@ class _UpdateStudentPageState extends State<UpdateStudentPage> {
       backgroundColor: Colors.white,
 
 
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Card(
-                elevation: 5.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildTextField("Student Name", Icons.person, studentNameController),
-                      buildTextField("Roll Number", Icons.person, rollNoController),
-                      buildTextField("Register Number", Icons.person, regNoController),
-                      buildTextField("Department", Icons.work, departmentController),
-                      buildTextField("Section", Icons.abc_outlined, sectionController),
-                      buildTextField("Date of Birth", Icons.calendar_today, dobController),
-                      buildTextField("Gender", Icons.transgender, genderController),
-                      buildTextField("Place of Birth", Icons.location_on, placeOfBirthController),
-                      buildTextField("Email", Icons.email, emailController),
-                      buildTextField("Phone Number", Icons.phone, phoneNumberController),
-                      buildTextField("Permanent Address", Icons.home, permanentAddressController),
-                      buildTextField("Present Address", Icons.location_city, presentAddressController),
-                      buildTextField("Community", Icons.group, communityController),
-                      buildTextField("Father's Name", Icons.person, fathernameController),
-                      buildTextField("Father's Occupation", Icons.work, fatheroccupationController),
-                      buildTextField("Mother's Name", Icons.person, mothernameController),
-                      buildTextField("Mother's Occupation", Icons.work, motheroccupationController),
-                      buildTextField("10th Score", Icons.score, score10thController),
-                      buildTextField("10th Board", Icons.score, board10thController),
-                      buildTextField("10th Year of Passing", Icons.calendar_today, yearofpassing10thController),
-                      buildTextField("12th Score", Icons.score, score12thController),
-                      buildTextField("12th Board", Icons.score, board12thController),
-                      buildTextField("12th Year of Passing", Icons.calendar_today, yearofpassing12thController),
-                      buildTextField("Diploma Score", Icons.score, scorediplomaController),
-                      buildTextField("Diploma Branch", Icons.work, branchdiplomaController),
-                      buildTextField("Diploma Year of Passing", Icons.calendar_today, yearofpassingdiplomaController),
-                      buildTextField("Parent's Phone Number", Icons.phone, parentphnoController),
-                      buildTextField("Aadhar Number", Icons.credit_card, aadharController),
-                      buildTextField("Placement Willingness", Icons.work, placementwillingController),
-                      buildTextField("Batch", Icons.date_range, batchController),
-                      buildTextField("Current Semester", Icons.date_range, currentsemController),
-                      buildTextField("CGPA", Icons.date_range, cgpaController),
-                      buildTextField("Standing Arrears", Icons.date_range, standingArrearController),
-                      buildTextField("History of Arrears", Icons.date_range, historyOfArrearController),
-                      buildTextField("Semester 1 GPA", Icons.score, sem1gpaController),
-                      buildTextField("Semester 2 GPA", Icons.score, sem2gpaController),
-                      buildTextField("Semester 3 GPA", Icons.score, sem3gpaController),
-                      buildTextField("Semester 4 GPA", Icons.score, sem4gpaController),
-                      buildTextField("Semester 5 GPA", Icons.score, sem5gpaController),
-                      buildTextField("Semester 6 GPA", Icons.score, sem6gpaController),
-                      buildTextField("Semester 7 GPA", Icons.score, sem7gpaController),
-                      buildTextField("Semester 8 GPA", Icons.score, sem8gpaController),
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Card(
+                  elevation: 5.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        buildTextField("Student Name", Icons.person, studentNameController),
+                        buildTextField("Roll Number", Icons.person, rollNoController),
+                        buildTextField("Register Number", Icons.person, regNoController),
+                        buildTextField("Department", Icons.work, departmentController),
+                        buildTextField("Section", Icons.abc_outlined, sectionController),
+                        buildTextField("Date of Birth", Icons.calendar_today, dobController),
+                        buildTextField("Gender", Icons.transgender, genderController),
+                        buildTextField("Place of Birth", Icons.location_on, placeOfBirthController),
+                        buildTextField("Email", Icons.email, emailController),
+                        buildTextField("Phone Number", Icons.phone, phoneNumberController),
+                        buildTextField("Permanent Address", Icons.home, permanentAddressController),
+                        buildTextField("Present Address", Icons.location_city, presentAddressController),
+                        buildTextField("Community", Icons.group, communityController),
+                        buildTextField("Father's Name", Icons.person, fathernameController),
+                        buildTextField("Father's Occupation", Icons.work, fatheroccupationController),
+                        buildTextField("Mother's Name", Icons.person, mothernameController),
+                        buildTextField("Mother's Occupation", Icons.work, motheroccupationController),
+                        buildTextField("10th Score", Icons.score, score10thController),
+                        buildTextField("10th Board", Icons.score, board10thController),
+                        buildTextField("10th Year of Passing", Icons.calendar_today, yearofpassing10thController),
+                        buildTextField("12th Score", Icons.score, score12thController),
+                        buildTextField("12th Board", Icons.score, board12thController),
+                        buildTextField("12th Year of Passing", Icons.calendar_today, yearofpassing12thController),
+                        buildTextField("Diploma Score", Icons.score, scorediplomaController),
+                        buildTextField("Diploma Branch", Icons.work, branchdiplomaController),
+                        buildTextField("Diploma Year of Passing", Icons.calendar_today, yearofpassingdiplomaController),
+                        buildTextField("Parent's Phone Number", Icons.phone, parentphnoController),
+                        buildTextField("Aadhar Number", Icons.credit_card, aadharController),
+                        buildTextField("Placement Willingness", Icons.work, placementwillingController),
+                        buildTextField("Batch", Icons.date_range, batchController),
+                        buildTextField("Current Semester", Icons.date_range, currentsemController),
+                        buildTextField("CGPA", Icons.date_range, cgpaController),
+                        buildTextField("Standing Arrears", Icons.date_range, standingArrearController),
+                        buildTextField("History of Arrears", Icons.date_range, historyOfArrearController),
+                        buildTextField("Semester 1 GPA", Icons.score, sem1gpaController),
+                        buildTextField("Semester 2 GPA", Icons.score, sem2gpaController),
+                        buildTextField("Semester 3 GPA", Icons.score, sem3gpaController),
+                        buildTextField("Semester 4 GPA", Icons.score, sem4gpaController),
+                        buildTextField("Semester 5 GPA", Icons.score, sem5gpaController),
+                        buildTextField("Semester 6 GPA", Icons.score, sem6gpaController),
+                        buildTextField("Semester 7 GPA", Icons.score, sem7gpaController),
+                        buildTextField("Semester 8 GPA", Icons.score, sem8gpaController),
 
-                      // Display error message if there is any
-                      Text(
-                        errorMessage,
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      SizedBox(height: 16.0),
-                      // Submit button with circular loading indicator
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: isProcessing ? null : validateAndSubmit,
-                          child: isProcessing
-                              ? CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          )
-                              : Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.send),
-                              SizedBox(width: 8.0),
-                              Text('Submit'),
-                            ],
+                        // Display error message if there is any
+                        Text(
+                          errorMessage,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                    ],
+
+                        SizedBox(height: 16.0),
+                        // Submit button with circular loading indicator
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: isProcessing ? null : validateAndSubmit,
+                            child: isProcessing
+                                ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            )
+                                : Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.send),
+                                SizedBox(width: 8.0),
+                                Text('Submit'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          if (isProcessing) buildLoadingOverlay(),
-        ],
+            if (isProcessing) buildLoadingOverlay(),
+          ],
+        ),
       ),
     );
   }
