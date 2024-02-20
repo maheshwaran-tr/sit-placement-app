@@ -19,12 +19,13 @@ class ApplyJobPage extends StatefulWidget {
 class _ApplyJobPageState extends State<ApplyJobPage> {
   bool hasApplied = false;
   late final Student studentData;
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
     studentData = widget.studentprofile!;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +74,10 @@ class _ApplyJobPageState extends State<ApplyJobPage> {
                 children: [
                   Text(
                     "Job ID: ${widget.job.jobId}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.deepPurple),
                   ),
                   SizedBox(height: 10.0),
                   Text(
@@ -83,7 +87,10 @@ class _ApplyJobPageState extends State<ApplyJobPage> {
                   SizedBox(height: 10.0),
                   Text(
                     "Job Name : ${widget.job.jobName}",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black45),
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black45),
                   ),
                 ],
               ),
@@ -109,7 +116,10 @@ class _ApplyJobPageState extends State<ApplyJobPage> {
                     children: [
                       Text(
                         "Job Description:",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.deepPurple),
                       ),
                       Text(
                         "${widget.job.jobDescription}",
@@ -118,7 +128,10 @@ class _ApplyJobPageState extends State<ApplyJobPage> {
                       SizedBox(height: 20.0),
                       Text(
                         "Eligibility Criteria:",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.deepPurple),
                       ),
                       Text(
                         "10th Mark: ${widget.job.eligible10ThMark}",
@@ -135,7 +148,10 @@ class _ApplyJobPageState extends State<ApplyJobPage> {
                       SizedBox(height: 20.0),
                       Text(
                         "Interview Details:",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.deepPurple),
                       ),
                       Text(
                         "Venue: ${widget.job.venue}",
@@ -159,19 +175,7 @@ class _ApplyJobPageState extends State<ApplyJobPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton.icon(
-                  onPressed: isEligible
-                      ? () async {
-                    print(studentData.rollNo);
-                    JobRequest.applyJob(
-                      widget.job.jobId,
-                      studentData.studentId,
-                      widget.token
-                    );
-                    setState(() {
-                      hasApplied = true;
-                    });
-                  }
-                      : null,
+                  onPressed: isEligible ? applyJob : null,
                   icon: Icon(Icons.send, size: 24),
                   label: Text(
                     "Apply Now",
@@ -190,8 +194,8 @@ class _ApplyJobPageState extends State<ApplyJobPage> {
                 ElevatedButton.icon(
                   onPressed: hasApplied
                       ? () {
-                    // Add your upload logic here
-                  }
+                          // Add your upload logic here
+                        }
                       : null,
                   icon: Icon(Icons.cloud_upload, size: 24),
                   label: Text(
@@ -216,10 +220,10 @@ class _ApplyJobPageState extends State<ApplyJobPage> {
     );
   }
 
-  bool checkEligibility(Student student,JobPostModel job) {
-    if(studentData.score10Th! >= job.eligible10ThMark){
-      if(studentData.score12Th! >= job.eligible12ThMark){
-        if(studentData.cgpa! >= job.eligibleCgpaMark){
+  bool checkEligibility(Student student, JobPostModel job) {
+    if (studentData.score10Th! >= job.eligible10ThMark) {
+      if (studentData.score12Th! >= job.eligible12ThMark) {
+        if (studentData.cgpa! >= job.eligibleCgpaMark) {
           return true;
         }
       }
@@ -227,5 +231,56 @@ class _ApplyJobPageState extends State<ApplyJobPage> {
     return false;
   }
 
+  void applyJob() async {
+    setState(() {
+      isLoading = true;
+    });
 
+    String isApplied = await JobRequest.applyJob(
+      widget.job.jobId,
+      studentData.studentId,
+      widget.token,
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (isApplied == "Already Applied") {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Already Applied"),
+              content: Text("You have already applied to this job."),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          });
+    } else if (isApplied == "Applied Successfully") {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Applied Successfully"),
+            content: Text("You have successfully applied to this job."),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 }

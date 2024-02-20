@@ -7,6 +7,7 @@ import 'package:sit_placement_app/backend/models/job_post_model.dart';
 import '../url_config/urls.dart';
 
 class JobRequest {
+
   static Future<bool> postTheJob(String token, JobPostModel job) async {
     var regBody = job.toJson();
     final response = await http.post(Uri.parse(Urls.addJobs),
@@ -18,7 +19,6 @@ class JobRequest {
     if (response.statusCode == 200) {
       return true;
     } else {
-      print(response.statusCode);
       return false;
     }
   }
@@ -107,7 +107,7 @@ class JobRequest {
     throw Exception('Failed to load jobs');
   }
 
-  static Future<void> applyJob(int jobId, int rollNo, String token) async {
+  static Future<String> applyJob(int jobId, int rollNo, String token) async {
     var regBody = {"jobId": jobId, "studentId": rollNo};
     var response = await http.post(Uri.parse(Urls.applyJob),
         headers: {
@@ -117,9 +117,9 @@ class JobRequest {
         body: jsonEncode(regBody));
     print(jsonEncode(regBody));
     if (response.statusCode == 200) {
-      print("APPLIED");
+      return response.body;
     } else {
-      print("FAILED");
+      return response.body;
     }
   }
 }

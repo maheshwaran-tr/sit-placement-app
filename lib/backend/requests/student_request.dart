@@ -10,6 +10,7 @@ class StudentRequest {
 
   static Future<List<JobAppliedModel>?> getJobAppliedForAllDeptStudents(
       String token, String dept, int statusId) async {
+
     final response = await http.post(Uri.parse(Urls.studentsByDeptAndStatus),
         headers: {
           'Authorization': 'Bearer $token',

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:sit_placement_app/backend/requests/image_requests.dart';
 import 'package:sit_placement_app/student_pages/drawer/menu_page/menu_page.dart';
 
 import '../../backend/models/student_model.dart';
@@ -122,15 +123,36 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                               ],
                             ),
                             child: ClipOval(
-                              child: Image.network(
-                                "https://rukminim2.flixcart.com/image/850/1000/l2rwzgw0/poster/6/v/3/medium-obito-uchiha-naruto-anime-series-matte-finish-poster-original-imagefd2yuvhfaw9.jpeg?q=20",
-                                fit: BoxFit.cover,
+                              child: FutureBuilder(
+                                future: ImageRequests.fetchImageByName("image_name"),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    return Center(
+                                      child: Text('Error: ${snapshot.error}'),
+                                    );
+                                  } else if (!snapshot.hasData) {
+                                    return Center(
+                                      child: Text('No data available'),
+                                    );
+                                  } else {
+                                    // Image fetched successfully
+                                    return Image.memory(
+                                      snapshot.data!,
+                                      fit: BoxFit.cover,
+                                    );
+                                  }
+                                },
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
+
                     SizedBox(height: 20),
                     Center(
                       child: Text(

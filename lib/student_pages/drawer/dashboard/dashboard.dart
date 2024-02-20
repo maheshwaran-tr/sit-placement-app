@@ -4,6 +4,7 @@ import 'package:sit_placement_app/backend/models/applied_job_model.dart';
 import 'package:sit_placement_app/backend/models/student_model.dart';
 import 'package:sit_placement_app/backend/requests/student_request.dart';
 import 'package:sit_placement_app/student_pages/StudentNotification/StudentNotification.dart';
+import 'package:sit_placement_app/student_pages/student_home_page/applied_job_list.dart';
 import 'package:sit_placement_app/student_pages/student_home_page/job_list_page.dart';
 
 
@@ -213,7 +214,7 @@ class _DashBoardState extends State<DashBoard> {
                     } else if (catName[index] == "Upload Status") {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => UploadStatusPage()),
+                        MaterialPageRoute(builder: (context) => StudentJobApplicationList(token: widget.token, student: widget.student!)),
                       );
                     } else if (catName[index] == "Apply Job") {
                       Navigator.push(

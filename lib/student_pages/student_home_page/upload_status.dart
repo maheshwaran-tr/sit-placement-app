@@ -19,6 +19,17 @@ class _UploadStatusPageState extends State<UploadStatusPage> {
   String? interviewStatus;
   String proof = '';
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadData();
+  }
+  loadData(){
+    setState(() {
+      companyName = "HELLO";
+    });
+  }
   final List<String> campusTypes = ['On Campus', 'Off Campus'];
   final List<String> interviewStatusOptions = ['Selected', 'Not Selected', 'Waiting for Result'];
 

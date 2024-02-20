@@ -1,7 +1,8 @@
 class Urls {
 
-    static const baseurl = "http://52.62.210.139/sit";  // LIVE
-  //static const baseurl = "http://10.0.2.2:8080/sit";    // TEST
+    // static const baseurl = "http://52.62.210.139/sit";  // LIVE
+  static const baseurl = "http://10.0.2.2:7070/sit";    // TEST
+  // static const baseurl = "http://192.168.0.13:7070/sit";    // TEST
 
 
   // Auth Urls
@@ -41,4 +42,8 @@ class Urls {
   // Admin Urls
   static const String getApprovedStudentsAdmin = "$baseurl/admin/get-student-by-dept-sts";
   static const String getAllApplications = "$baseurl/admin/get-all-applications";
+
+  // Image Urls
+  static const String uploadImage = "$baseurl/images/upload-img";
+  static const String getImageByUsername = "$baseurl/images/img";
 }
