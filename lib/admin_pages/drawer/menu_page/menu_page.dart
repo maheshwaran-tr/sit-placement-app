@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:sit_placement_app/admin_pages/AdminChangePassword/AdminChangePassword.dart';
 import 'package:sit_placement_app/admin_pages/AdminProfilePage/adminProfile.dart';
 import 'package:sit_placement_app/admin_pages/drawer/drawer_home.dart';
 import '../../../backend/models/staff_model.dart';
@@ -30,10 +31,10 @@ class MenuOption {
 class MenuOptions {
   static final home = MenuOption(Icons.home, "Home");
   static final profile = MenuOption(Icons.person, "Profile");
-  static final setting = MenuOption(Icons.settings, "Setting");
+  static final changePass = MenuOption(Icons.lock_person, "Change Password");
   static final logout = MenuOption(Icons.logout, "Logout");
 
-  static final allOptions = [home, profile, setting, logout];
+  static final allOptions = [home, profile, changePass, logout];
 }
 
 class _AdminMenuPageState extends State<AdminMenuPage> {
@@ -178,8 +179,14 @@ class _AdminMenuPageState extends State<AdminMenuPage> {
         ),
       );
       // Add your logic for Profile here
-    } else if (option == MenuOptions.setting) {
+    } else if (option == MenuOptions.changePass) {
       print('Tapped on Setting');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AdminChangePasswordPage(token: widget.token),
+        ),
+      );
       // Add your logic for Setting here
     } else if (option == MenuOptions.logout) {
       print('Tapped on Logout');

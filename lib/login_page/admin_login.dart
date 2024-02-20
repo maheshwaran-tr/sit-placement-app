@@ -154,7 +154,7 @@ class _AdminLoginState extends State<AdminLogin> with SingleTickerProviderStateM
                                       JwtDecoder.decode(accessToken);
                                       String role = decodedToken['role'];
                                       if (role == "ADMIN") {
-                                        Navigator.push(
+                                        Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>

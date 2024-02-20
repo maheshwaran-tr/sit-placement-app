@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage>
                 SizedBox(height: 60,),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => AdminLogin(),
@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage>
                         minWidth: double.infinity,
                         height: 60,
                         onPressed: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => StaffLogin()),
                           );
@@ -184,7 +184,7 @@ class _HomePageState extends State<HomePage>
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => StudentLogin(),

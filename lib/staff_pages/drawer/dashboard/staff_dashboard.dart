@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:sit_placement_app/staff_pages/StaffNotification/StaffNotification.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/add_student.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/job_applied_list.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/staff_approval_page.dart';
@@ -176,6 +177,7 @@ class _StaffDashState extends State<StaffDash> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        _navigateToNotifi();
                         // Add your logic for the second icon press
                         print("Notification Icon Pressed");
                       },
@@ -331,6 +333,15 @@ class _StaffDashState extends State<StaffDash> {
           ),
         ),
       );
+
+  void _navigateToNotifi() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => StaffNotificationsPage(),
+      ),
+    );
+  }
 }
 void _navigateToPage(String pageTitle) {
   switch (pageTitle) {

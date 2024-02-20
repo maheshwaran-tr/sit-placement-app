@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:sit_placement_app/admin_pages/AdminNotification/AdminNotification.dart';
 import 'package:sit_placement_app/admin_pages/admin_home_page/add_staff.dart';
 import 'package:sit_placement_app/admin_pages/admin_home_page/department_staff_list.dart';
 import 'package:sit_placement_app/admin_pages/admin_home_page/department_student_list.dart';
@@ -161,7 +162,8 @@ class _AdminDashState extends State<AdminDash> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // Add your logic for the second icon press
+                        _navigateToNotifi();
+
                         print("Notification Icon Pressed");
                       },
                       child: Icon(Icons.notification_add_rounded, size: 30, color: Colors.blue),
@@ -324,6 +326,15 @@ class _AdminDashState extends State<AdminDash> {
           ),
         ),
       );
+
+  void _navigateToNotifi() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AdminNotificationsPage(),
+      ),
+    );
+  }
 }
 Future<void> _navigateToPage(String pageTitle,String token,BuildContext context) async {
   switch (pageTitle) {

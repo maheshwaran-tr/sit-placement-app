@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:sit_placement_app/student_pages/StudentChangePassword/StudentChangePassword.dart';
 import 'package:sit_placement_app/student_pages/drawer/drawer_home.dart';
 import 'package:sit_placement_app/student_pages/student_profile_page/student_profile.dart';
 import '../../../backend/requests/auth_request.dart';
@@ -179,7 +180,13 @@ class _MenuPageState extends State<MenuPage> {
       // Add your logic for Setting here
     }
     else if (option == MenuOptions.changePass) {
-      print('Tapped on Setting');
+      print('Tapped on ChangePassword');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StudentChangePasswordPage(token: widget.token),
+        ),
+      );
       // Add your logic for Setting here
     }
     else if (option == MenuOptions.logout) {

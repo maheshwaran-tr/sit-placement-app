@@ -154,7 +154,7 @@ class _StudentLoginState extends State<StudentLogin> with SingleTickerProviderSt
                                       JwtDecoder.decode(accessToken);
                                       String role = decodedToken['role'];
                                       if (role == "STUDENT") {
-                                        Navigator.push(
+                                        Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>

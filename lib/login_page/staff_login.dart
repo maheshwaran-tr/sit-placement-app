@@ -155,7 +155,7 @@ class _StaffLoginState extends State<StaffLogin> with SingleTickerProviderStateM
                                       JwtDecoder.decode(accessToken);
                                       String role = decodedToken['role'];
                                       if (role == "STAFF") {
-                                        Navigator.push(
+                                        Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
