@@ -4,6 +4,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/add_student.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/job_applied_list.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/staff_approval_page.dart';
+import 'package:sit_placement_app/staff_pages/staff_home_page/staff_posted_job.dart';
 import 'package:sit_placement_app/staff_pages/staff_home_page/staff_student_list.dart';
 
 import '../../../backend/models/student_model.dart';
@@ -97,7 +98,7 @@ class _StaffDashState extends State<StaffDash> {
   ];
 
   List catName = [
-    "Approval Page",
+    "Placement Willing",
     "Student List",
     "Posted Job",
     "Add Student",
@@ -207,9 +208,12 @@ class _StaffDashState extends State<StaffDash> {
                     }else if(catName[index] == "Job Applied List"){
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => JobAppliedListPage(token: widget.token)));
-                    }else if(catName[index] == "Approval Page"){
+                    }else if(catName[index] == "Placement Willing"){
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => ApprovalPage(token: widget.token)));
+                    }else if(catName[index] == "Posted Job"){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => StaffPostedJobsListPage(token: widget.token)));
                     }
                   },
                   child: Column(
